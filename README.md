@@ -1,5 +1,3 @@
 # shorts
 
-## process_indel_vcf.pl
-
-Check 170721-labBook
+Backup of scripts while still in production. See text folder for more information on workflows.

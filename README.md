@@ -13,3 +13,4 @@ ragtag.sh	reads to genome for assembly correction and SV identification
 shorts.sh	Small scripts while still in production.
 supernova.sh	assemble 10x data
 trimmomatic.sh	basic script to trim reads
+seq_extractor.py	script that extracts sequences from fasta based on names in list.

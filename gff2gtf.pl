@@ -13,11 +13,11 @@ my ($name, $path, $suffix) = fileparse($inFile, qr/\.gff/);
 my $outFile = $path . $name . ".gtf";
 
 my $inGFF = Bio::FeatureIO->new( '-file' => "$inFile",
-'-format' => 'GFF',
-'-version' => 3 );
+	'-format' => 'GFF',
+	'-version' => 3 );
 my $outGTF = Bio::FeatureIO->new( '-file' => ">$outFile",
-'-format' => 'GFF',
-'-version' => 2.5);
+	'-format' => 'GFF',
+	'-version' => 2.5);
 
 while (my $feature = $inGFF->next_feature() ) {
 

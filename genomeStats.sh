@@ -10,11 +10,14 @@
 
 # for i in $(echo -e "IM62\nIM125\nIM767"); do sbatch genomeStats.sh $i; done
 
-cd /home/p860v026/temp/10x/$1
+# cd /home/p860v026/temp/10x/$1
+
+SFOLDER=/home/p860v026/temp/pacbio/Lila.pacbio/canu767
+GENOME=767.contigs.fasta
+
+cd $SFOLDER
 
 mkdir gstats
 
-# gunzip $1.fasta.gz 
-
-/home/p860v026/temp/STAR/source/STAR --runThreadN 8 --runMode genomeGenerate --genomeDir ./gstats/ --genomeFastaFiles /home/p860v026/temp/10x/$1/$1.fasta
+/home/p860v026/temp/STAR/source/STAR --runThreadN 8 --runMode genomeGenerate --genomeDir ./gstats/ --genomeFastaFiles $SFOLDER/$GENOME
 

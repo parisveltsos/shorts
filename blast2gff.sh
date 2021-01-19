@@ -1,5 +1,5 @@
 #!/bin/bash
-# from https://github.com/raymondkiu/blastoutput2gff
+# fixed from https://github.com/raymondkiu/blastoutput2gff
 
 if [ $# -lt 1 ] ; then
     echo ""
@@ -14,6 +14,6 @@ for i in ${filear[@]}
 
 do
 
-awk '{print $1"\tblast\tgene\t"$7"\t"$8"\t.\t.\t.\tID=Gene"$7";Name="$2}' $i > $i.gff
+awk '{print $2"\tblast\tgene\t"$9"\t"$10"\t.\t.\t.\tID=Gene"$9";Name="$1}' $i > $i.gff
 
 done

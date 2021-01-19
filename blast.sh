@@ -14,7 +14,7 @@ echo "Running"
 WORKFOLDER=/home/p860v026/temp/driver
 GENOMEFOLDER=/home/p860v026/temp/Mgutv5/assembly
 GENOME=MguttatusTOL_551_v5.0.fa
-QUERY=drive.seqs.v2build.fasta 
+QUERY=inversionTranscripts.fasta 
 
 module load blast+
 

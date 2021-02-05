@@ -11,8 +11,8 @@
 
 BUSCOSUPPORT=/home/p860v026/temp/bin/buscoSupport
 
-GFOLDER=/home/p860v026/temp/pacbio/Lila.pacbio/canu767
-GNAME=767.contigs.fasta
+GFOLDER=/home/p860v026/temp/pacbio/r64060_20201112_192654/1_A01/canu541
+GNAME=541.contigs.fasta
 
 module load busco
 
@@ -45,3 +45,4 @@ run_BUSCO.py -i $GNAME -o busco_$GNAME -l $BUSCOSUPPORT/embryophyta_odb9 -m geno
 # C:92.0%[S:87.5%,D:4.5%],F:1.5%,M:6.5%,n:1440	V5
 # C:88.8%[S:77.3%,D:11.5%],F:2.6%,M:8.6%,n:1440	canu62
 # C:88.7%[S:70.9%,D:17.8%],F:2.9%,M:8.4%,n:1440 canu767
+# C:93.8%[S:89.7%,D:4.1%],F:1.5%,M:4.7%,n:1440 541

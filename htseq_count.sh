@@ -26,7 +26,7 @@ cd /home/p860v026/temp/3prime
 
 #  ls /home/p860v026/temp/3prime/reads > listbbblue
 #  vim listbbblue
-#  for i in $(cat listbbblue); do sbatch $i; done
+#  for i in $(cat listbbblue); do sbatch ~/code/htseq_count.sh $i; done
 
 module load java
 
@@ -70,3 +70,17 @@ htseq-count -m intersection-nonempty -s yes -f bam -r pos -t exon -i Parent ./ma
 # 
 # # combine columns, simplify names, remove last 5 rows with summary
 # paste temp/*.txt | perl -pe 's/_counts.txt//g ; s/.v5.0//' | head -n -5 > final_count.txt
+
+# Transpose file in BBedit, and remove L001 and L002 from the names
+# in R
+
+# datapath <- "~/Downloads"
+# kdata <- read.table(file.path(datapath, "final_count.txt"), header=T)
+# str(kdata)
+# 
+# 
+# pool1Comb <- aggregate(.~gene,data=kdata,FUN=sum)
+# write.table(pool1Comb, file=file.path(datapath, "pool1Comb.txt"), quote=F, row.names=F, sep="\t")
+# simplify name _(.*?)\t
+# transpose
+# make matrix, count and design files

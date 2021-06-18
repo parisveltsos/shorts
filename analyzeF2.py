@@ -1,17 +1,22 @@
-﻿import sys
+import sys
 
 family = sys.argv[1]
 
-in_vcf = open("pool1.vcf", "r") 
+in_vcf = open("small.vcf", "r") 
 
-out_snps = open(family + ".snps.txt", "w")
-out_stats = open(family + ".stats.txt", "w")
+out_snps = open(family + ".snps2.txt", "w")
+out_stats = open(family + ".stats2.txt", "w")
+out_vcf = open(family + "clean.vcf", "w")
+out_ped = open(family + "ped.txt", "w")
 
 #  Criteria for inclusion
 Min_key = 2 # min calls for 767 to assign genotype
 Min2 = 2 # min calls for other parental line to assign genotype
 samples = 352
 mindepth = 3
+
+father = "664-P5_S35.sorted.bam"
+mother = "767-P2_S43.sorted.bam"
 
 def parsefield( data ):
 	GT=data.split(":")[0] # 1/1:101,14,0:1,12
@@ -45,13 +50,24 @@ in_key.close()
 print "number (P 767, P",family, ", F2",family,"):", len(x767),len(xline),len(xF2)
 
 for line_idx, line in enumerate(in_vcf):
-	cols = line.replace('\n', '').split('\t') 
-	if len(cols)==9+samples: # skip headers ::  ##contig=<ID=Chr_01,length=11879706> 
+	cols = line.replace('\n', '').split('\t')
+	if '##' in line:
+		out_vcf.write(line)
+
+	if '#CHROM' in line: 
+		lineTemp = [cols[0] + '\t' + cols[1] + '\t' + cols[2] + '\t' + cols[3] + '\t' + cols[4] + '\t' + cols[5] + '\t' + cols[6] + '\t' + cols[7] + '\t' + cols[8] + '\t' + cols[9]]
+		for x in x767:
+			lineTemp.append(cols[x])
+		for x in xline:
+			lineTemp.append(cols[x])
+		for x in xF2:
+			lineTemp.append(cols[x])
+		out_vcf.write('\t'.join([str(x) for x in lineTemp]) + '\n')
+		out_ped.write('CHR' + '\t' + 'POS' + '\t'.join([family+len(lineTemp-9)]))
+	if len(cols)==9+samples: # skip headers
 # Chr_01	20079	.	T	C	43.1495	.	DP=9373;VDB=1.83927e-32;SGB=-143.472;RPB=2.08262e-21;MQB=1;BQB=2.55912e-09;MQ0F=0;ICB=0.000173123;HOB=8.54372e-05;AC=2;AN=306;DP4=0,9065,0,88;MQ=20	GT:PL:AD	./.:0,0,0:0,0	0/0:0,30,88:10,0	./.:0,0,0:0,0	./.:0,0,0:0,0	./.:0,0,0:0,0	./.:0,0,0:0,0	./.:0,0,0:0,0	0/0:0,6,36:2,0	0/0:0,255,101:106,0	0/0:0,108,86:36,0	0/0:0,6,36:2,0	0/0:0,255,159:233,0	0/0:0,255,147:213,0	
-
 		if len(cols[3])==1 and len(cols[4])==1:  # require line to be bi-allelic SNP
-# could also filter on MQ or other at this point
-
+			lineTemp = [cols[0] + '\t' + cols[1] + '\t' + cols[2] + '\t' + cols[3] + '\t' + cols[4] + '\t' + cols[5] + '\t' + cols[6] + '\t' + cols[7] + '\t' + cols[8] + '\t' + cols[9]]
 			g={"0/0":0,"0/1":0,"1/1":0}
 			for x in x767:
 				GT,pl1,ad1 = parsefield(cols[x])
@@ -61,10 +77,15 @@ for line_idx, line in enumerate(in_vcf):
 				if GT != "./.":
 					if GT =="0/0" and gl[0]==0 and gl[1]>0 and gl[2]>0 and m1>=mindepth:
 						g[GT]+=1
+						lineTemp.append(GT + ':' + pl1 + ':' + ad1)
 					elif GT =="1/1" and gl[2]==0 and gl[1]>0 and gl[0]>0 and m1>=mindepth:
 						g[GT]+=1
+						lineTemp.append(GT + ':' + pl1 + ':' + ad1)
 					elif GT =="0/1" and gl[1]==0 and gl[2]>0 and gl[0]>0 and m1>=mindepth:
 						g[GT]+=1
+						lineTemp.append(GT + ':' + pl1 + ':' + ad1)
+					else:
+						lineTemp.append("./ ." + ':' + pl1 + ':' + ad1)
 			out_snps.write(cols[0]+'\t'+cols[1]+'\t'+cols[3]+'\t'+cols[4]+'\t'+str(g["0/0"])+","+str(g["0/1"])+","+str(g["1/1"]))
 			
 			c767="U"
@@ -82,10 +103,15 @@ for line_idx, line in enumerate(in_vcf):
 				if GT != "./.":
 					if GT =="0/0" and gl[0]==0 and gl[1]>0 and gl[2]>0 and m1>=mindepth:
 						g[GT]+=1
+						lineTemp.append(GT + ':' + pl1 + ':' + ad1)
 					elif GT =="1/1" and gl[2]==0 and gl[1]>0 and gl[0]>0 and m1>=mindepth:
 						g[GT]+=1
+						lineTemp.append(GT + ':' + pl1 + ':' + ad1)
 					elif GT =="0/1" and gl[1]==0 and gl[2]>0 and gl[0]>0 and m1>=mindepth:
 						g[GT]+=1
+						lineTemp.append(GT + ':' + pl1 + ':' + ad1)
+					else:
+						lineTemp.append("./ ." + ':' + pl1 + ':' + ad1)
 			out_snps.write('\t'+str(g["0/0"])+","+str(g["0/1"])+","+str(g["1/1"]))
 
 			cP="U"
@@ -116,10 +142,15 @@ for line_idx, line in enumerate(in_vcf):
 				if GT != "./.":
 					if GT =="0/0" and gl[0]==0 and gl[1]>0 and gl[2]>0 and m1>=mindepth:
 						g[GT]+=1
+						lineTemp.append(GT + ':' + pl1 + ':' + ad1)
 					elif GT =="1/1" and gl[2]==0 and gl[1]>0 and gl[0]>0 and m1>=mindepth:
 						g[GT]+=1
+						lineTemp.append(GT + ':' + pl1 + ':' + ad1)
 					elif GT =="0/1" and gl[1]==0 and gl[2]>0 and gl[0]>0 and m1>=mindepth:
 						g[GT]+=1
+						lineTemp.append(GT + ':' + pl1 + ':' + ad1)
+					else:
+						lineTemp.append("./ ." + ':' + pl1 + ':' + ad1)
 					if cat=="R":
 						if vv[0]=="0/0":
 							amibad[x][0]+=1 # add to count of good
@@ -132,6 +163,7 @@ for line_idx, line in enumerate(in_vcf):
 							amibad[x][1]+=1 # add to count of bad
 
 			out_snps.write('\t' + str(g["0/0"]) + "," + str(g["0/1"]) + "," + str(g["1/1"]) + '\n')
+			out_vcf.write('\t'.join([str(x) for x in lineTemp]) + '\n')
 
 newlist=[]
 for f2id in amibad:

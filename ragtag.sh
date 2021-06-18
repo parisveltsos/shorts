@@ -9,6 +9,8 @@
 #SBATCH --time=1-23:59:00             # Time limit days-hrs:min:sec
 #SBATCH --output=out_ragtag_%j.log         # Standard output and error log
 
+# https://github.com/malonge/RagTag
+
 echo "Running"
 
 cd /home/p860v026/temp/Mgut_Mtil

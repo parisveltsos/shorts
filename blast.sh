@@ -11,10 +11,10 @@
 
 echo "Running"
  
-WORKFOLDER=/home/p860v026/temp/driver
+WORKFOLDER=/home/p860v026/temp/repeats
 GENOMEFOLDER=/home/p860v026/temp/Mgutv5/assembly
 GENOME=MguttatusTOL_551_v5.0.fa
-QUERY=inversionTranscripts.fasta 
+QUERY=MgTE.fa
 
 module load blast+
 

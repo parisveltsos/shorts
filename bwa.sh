@@ -6,7 +6,7 @@
 #SBATCH --ntasks=1                          # Run on a single CPU
 #SBATCH --cpus-per-task=8
 #SBATCH --mem-per-cpu=16gb                     # Job memory request
-#SBATCH --time=2-05:59:00             # Time limit days-hrs:min:sec
+#SBATCH --time=14-05:59:00             # Time limit days-hrs:min:sec
 #SBATCH --output=out_bwa_%j.log         # Standard output and error log
 
 module load bwa

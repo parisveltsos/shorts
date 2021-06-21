@@ -7,7 +7,6 @@ in_vcf = open("small.vcf", "r")
 out_snps = open(family + ".snps2.txt", "w")
 out_stats = open(family + ".stats2.txt", "w")
 out_vcf = open(family + "clean.vcf", "w")
-out_ped = open(family + "ped.txt", "w")
 
 #  Criteria for inclusion
 Min_key = 2 # min calls for 767 to assign genotype
@@ -63,7 +62,8 @@ for line_idx, line in enumerate(in_vcf):
 		for x in xF2:
 			lineTemp.append(cols[x])
 		out_vcf.write('\t'.join([str(x) for x in lineTemp]) + '\n')
-#		out_ped.write('CHR' + '\t' + 'POS' + '\t'.join([family+len(lineTemp-9)]))
+		for j in range(len(x767) + len(xline) + len(xF2)):
+
 	if len(cols)==9+samples: # skip headers
 # Chr_01	20079	.	T	C	43.1495	.	DP=9373;VDB=1.83927e-32;SGB=-143.472;RPB=2.08262e-21;MQB=1;BQB=2.55912e-09;MQ0F=0;ICB=0.000173123;HOB=8.54372e-05;AC=2;AN=306;DP4=0,9065,0,88;MQ=20	GT:PL:AD	./.:0,0,0:0,0	0/0:0,30,88:10,0	./.:0,0,0:0,0	./.:0,0,0:0,0	./.:0,0,0:0,0	./.:0,0,0:0,0	./.:0,0,0:0,0	0/0:0,6,36:2,0	0/0:0,255,101:106,0	0/0:0,108,86:36,0	0/0:0,6,36:2,0	0/0:0,255,159:233,0	0/0:0,255,147:213,0	
 		if len(cols[3])==1 and len(cols[4])==1:  # require line to be bi-allelic SNP

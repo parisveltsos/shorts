@@ -2,7 +2,7 @@ import sys
 
 family = sys.argv[1]
 
-in_vcf = open("small.vcf", "r") 
+in_vcf = open("small.vcf", "r")
 
 out_snps = open(family + ".snps2.txt", "w")
 out_stats = open(family + ".stats2.txt", "w")
@@ -31,7 +31,7 @@ amibad = {}
 in_key = open("key.txt","r")
 
 for line_idx, line in enumerate(in_key):
-	cols = line.replace('\n', '').split('\t') 
+	cols = line.replace('\n', '').split('\t')
 # vcf_pos	sample_name	Family	ID	type
 # 9	1192-100_S164.sorted.bam	1192	100	F2
 	if line_idx > 0:
@@ -39,10 +39,10 @@ for line_idx, line in enumerate(in_key):
 			x767.append(int(cols[0]))
 
 		elif cols[4]=="Parental_line" and cols[2]==family:
-			xline.append(int(cols[0])) 
+			xline.append(int(cols[0]))
 
 		elif cols[4]=="F2" and cols[2]==family:
-			xF2.append(int(cols[0]))  
+			xF2.append(int(cols[0]))
 			amibad[int(cols[0])]=[0,0] # number of times agree, number of times disagree
 in_key.close()
 
@@ -53,7 +53,7 @@ for line_idx, line in enumerate(in_vcf):
 	if '##' in line:
 		out_vcf.write(line)
 
-	if '#CHROM' in line: 
+	if '#CHROM' in line:
 		lineTemp = [cols[0] + '\t' + cols[1] + '\t' + cols[2] + '\t' + cols[3] + '\t' + cols[4] + '\t' + cols[5] + '\t' + cols[6] + '\t' + cols[7] + '\t' + cols[8]]
 		for x in x767:
 			lineTemp.append(cols[x])
@@ -62,10 +62,9 @@ for line_idx, line in enumerate(in_vcf):
 		for x in xF2:
 			lineTemp.append(cols[x])
 		out_vcf.write('\t'.join([str(x) for x in lineTemp]) + '\n')
-		for j in range(len(x767) + len(xline) + len(xF2)):
 
 	if len(cols)==9+samples: # skip headers
-# Chr_01	20079	.	T	C	43.1495	.	DP=9373;VDB=1.83927e-32;SGB=-143.472;RPB=2.08262e-21;MQB=1;BQB=2.55912e-09;MQ0F=0;ICB=0.000173123;HOB=8.54372e-05;AC=2;AN=306;DP4=0,9065,0,88;MQ=20	GT:PL:AD	./.:0,0,0:0,0	0/0:0,30,88:10,0	./.:0,0,0:0,0	./.:0,0,0:0,0	./.:0,0,0:0,0	./.:0,0,0:0,0	./.:0,0,0:0,0	0/0:0,6,36:2,0	0/0:0,255,101:106,0	0/0:0,108,86:36,0	0/0:0,6,36:2,0	0/0:0,255,159:233,0	0/0:0,255,147:213,0	
+# Chr_01	20079	.	T	C	43.1495	.	DP=9373;VDB=1.83927e-32;SGB=-143.472;RPB=2.08262e-21;MQB=1;BQB=2.55912e-09;MQ0F=0;ICB=0.000173123;HOB=8.54372e-05;AC=2;AN=306;DP4=0,9065,0,88;MQ=20	GT:PL:AD	./.:0,0,0:0,0	0/0:0,30,88:10,0	./.:0,0,0:0,0	./.:0,0,0:0,0	./.:0,0,0:0,0	./.:0,0,0:0,0	./.:0,0,0:0,0	0/0:0,6,36:2,0	0/0:0,255,101:106,0	0/0:0,108,86:36,0	0/0:0,6,36:2,0	0/0:0,255,159:233,0	0/0:0,255,147:213,0
 		if len(cols[3])==1 and len(cols[4])==1:  # require line to be bi-allelic SNP
 			lineTemp = [cols[0] + '\t' + cols[1] + '\t' + cols[2] + '\t' + cols[3] + '\t' + cols[4] + '\t' + cols[5] + '\t' + cols[6] + '\t' + cols[7] + '\t' + cols[8]]
 			g={"0/0":0,"0/1":0,"1/1":0}
@@ -87,12 +86,12 @@ for line_idx, line in enumerate(in_vcf):
 						lineTemp.append("./." + ':' + pl1 + ':' + ad1)
 				if GT != "./.":
 					out_snps.write(cols[0]+'\t'+cols[1]+'\t'+cols[3]+'\t'+cols[4]+'\t'+str(g["0/0"])+","+str(g["0/1"])+","+str(g["1/1"]))
-			
+
 			c767="U"
 			if g["0/0"]>=Min_key and g["0/1"]==0 and g["1/1"]==0:
-				c767="R" 
+				c767="R"
 			elif g["1/1"]>=Min_key and g["0/1"]==0 and g["0/0"]==0:
-				c767="A" 
+				c767="A"
 
 			g={"0/0":0,"0/1":0,"1/1":0}
 			for x in xline:
@@ -116,9 +115,9 @@ for line_idx, line in enumerate(in_vcf):
 
 			cP="U"
 			if g["0/0"]>=Min2 and g["0/1"]==0 and g["1/1"]==0:
-				cP="R" 
+				cP="R"
 			elif g["1/1"]>=Min2 and g["0/1"]==0 and g["0/0"]==0:
-				cP="A" 
+				cP="A"
 
 			cat=-9 # negative is what John chooses when he does not have a better choice
 			if c767=="R" and cP=="R":
@@ -149,7 +148,7 @@ for line_idx, line in enumerate(in_vcf):
 						g[GT]+=1
 						lineTemp.append(GT + ':' + pl1 + ':' + ad1)
 					else:
-						lineTemp.append("./." + ':' + pl1 + ':' + ad1)
+						lineTemp.append('./.' + ':' + pl1 + ':' + ad1)
 				if GT != "./.":
 					if cat=="R":
 						if vv[0]=="0/0":
@@ -162,8 +161,8 @@ for line_idx, line in enumerate(in_vcf):
 						else:
 							amibad[x][1]+=1 # add to count of bad
 
+			out_vcf.write('\t'.join([str(j) for j in lineTemp]) + '\n')
 			out_snps.write('\t' + str(g["0/0"]) + "," + str(g["0/1"]) + "," + str(g["1/1"]) + '\n')
-			out_vcf.write('\t'.join([str(x) for x in lineTemp]) + '\n')
 
 newlist=[]
 for f2id in amibad:

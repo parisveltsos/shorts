@@ -1,14 +1,14 @@
 import sys
 
-if len(sys.argv)!=4:
-	print "\nUsage: \npython makePed.py mother father family\npython makePed.py 664-P5_S35.sorted.bam 767-P2_S43.sorted.bam 664\n\nAlso need key.txt and pool1.vcf files\n"
+if len(sys.argv)!=5:
+	print "\nUsage: \npython makePed.py mother father family vcf\npython makePed.py 664-P5_S35.sorted.bam 767-P2_S43.sorted.bam 664 pool1.vcf\n\nAlso need key.txt file\n"
 	sys.exit()
 	
 mother = sys.argv[1]
 father = sys.argv[2]
 family = sys.argv[3]
 
-in_vcf = open("pool1.vcf", "r") 
+in_vcf = open(sys.argv[4], "r") 
 
 out_ped = open(family + "ped.txt", "w")
 

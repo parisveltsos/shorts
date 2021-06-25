@@ -1,13 +1,16 @@
 import sys
 
-family = sys.argv[1]
+if len(sys.argv)!=4:
+	print "\nUsage: \npython makePed.py mother father family\npython makePed.py 664-P5_S35.sorted.bam 767-P2_S43.sorted.bam 664\n\nAlso need key.txt and pool1.vcf files\n"
+	sys.exit()
+	
+mother = sys.argv[1]
+father = sys.argv[2]
+family = sys.argv[3]
 
-in_vcf = open("small.vcf", "r") 
+in_vcf = open("pool1.vcf", "r") 
 
 out_ped = open(family + "ped.txt", "w")
-
-father = "664-P5_S35.sorted.bam"
-mother = "767-P2_S43.sorted.bam"
 
 x767 = []
 xline = []
@@ -35,6 +38,7 @@ out_ped.write('\n')
 
 out_ped.write('CHR' + '\t' + 'POS' + '\t' + father + '\t' + mother + '\t' + 'father\tmother')
 
+counter = 0
 for line_idx, line in enumerate(in_vcf):
 	cols = line.replace('\n', '').split('\t')
 	if '#CHROM' in line: 
@@ -45,6 +49,9 @@ for line_idx, line in enumerate(in_vcf):
 		for x in xF2:
 			out_ped.write('\t' + cols[x])
 		out_ped.write('\n')
+		counter=1
+	elif counter==1:
+		break
 
 out_ped.write('CHR\tPOS\t0\t0\t' + father + '\t' + father)
 

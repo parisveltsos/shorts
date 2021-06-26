@@ -1,11 +1,16 @@
 import sys
 
+if len(sys.argv)!=3:
+	print "\nUsage: \npython lm2bpcm.py family lof\npython makePed.py 1192 16\n\nThis script makes data used to plot cm vs bp with the Rscript bpcmPlot.r\n"
+	sys.exit()
+
 family = sys.argv[1]
+lod = sys.argv[2]
 
-in_call = open(family + "fil_2.call", "r") 
-in_map = open(family + "order_2.txt", "r") 
+in_call = open(family + ".call", "r") 
+in_map = open(family + "order" + lod + ".txt", "r") 
 
-out_excel = open(family + "_excel.txt", "w")
+out_excel = open(family + "lod" + lod + "_excel.txt", "w")
 
 genomeInfo={}
 
@@ -33,4 +38,4 @@ out_excel.write('chr\tbp\tlg\tcm\n')
 for j in range( len(excelList) ):
 	out_excel.write( str( excelList[j] ) )
 
-print "Done!"
+# print "Done!"

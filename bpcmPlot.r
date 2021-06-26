@@ -2,8 +2,9 @@ library(RColorBrewer)
 
 args <- commandArgs(trailingOnly = TRUE)
 line = paste(args[1])
+LOD = paste(args[2])
 # line="664"
-bpcmData <- read.table(paste(line, "_excel.txt", sep=""), header=T)
+bpcmData <- read.table(paste(line, "lod", LOD, "_excel.txt", sep=""), header=T)
 str(bpcmData)
 
 for ( LG in c('LG1','LG2','LG3','LG4', 'LG5', 'LG6', 'LG7', 'LG8', 'LG9', 'LG10', 'LG11', 'LG12', 'LG13', 'LG14') ) {

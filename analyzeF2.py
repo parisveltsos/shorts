@@ -2,7 +2,7 @@ import sys
 
 family = sys.argv[1]
 
-in_vcf = open("small.vcf", "r")
+in_vcf = open("pool1.vcf", "r")
 
 out_snps = open(family + ".snps2.txt", "w")
 out_stats = open(family + ".stats2.txt", "w")

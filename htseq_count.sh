@@ -10,14 +10,20 @@
 
 cd /home/p860v026/temp/3prime
 
+STAREXEC=/home/p860v026/temp/bin/STAR/source/STAR
+BBMAPFOLDER=/home/p860v026/temp/bbmap
+
+GFFFILE=/home/p860v026/temp/bin/flo/flo_mimulus/results/664_85_recover_lifted_exon.gff3
+GENOMEFILE=/home/p860v026/temp/IM664/664.contigs.fa
+
 ## RUN ONCE
 
-# mkdir star_v5_genome
+# mkdir star_664_genome
 
 # mkdir counts
 
 # generate genome index
-# /home/p860v026/temp/STAR/source/STAR --runThreadN 8 --runMode genomeGenerate --genomeDir ./star_v5_genome/ --genomeFastaFiles /home/p860v026/temp/Mgutv5/assembly/MguttatusTOL_551_v5.0.fa --sjdbGTFfile /home/p860v026/temp/Mgutv5/annotation/MguttatusTOL_551_v5.0.gene_exons.gff3 --sjdbGTFtagExonParentTranscript Parent --sjdbOverhang 74
+# $STAREXEC --runThreadN 8 --runMode genomeGenerate --genomeDir ./star_664_genome/ --genomeFastaFiles $GENOMEFILE --sjdbGTFfile $GFFFILE --sjdbGTFtagExonParentTranscript Parent --sjdbOverhang 74 --genomeSAindexNbases 13
 
 
 
@@ -29,27 +35,28 @@ cd /home/p860v026/temp/3prime
 #  for i in $(cat listbbblue); do sbatch ~/code/htseq_count.sh $i; done
 
 module load java
+module load samtools
 
 TRIMMEDNAME=$(perl -pe 's/.gz//' <(echo $1))
 
 # need to trim the reads
-/home/p860v026/temp/bbmap/bbduk.sh in=./reads/$1 out=./trimmed/$TRIMMEDNAME ref=/home/p860v026/temp/bbmap/resources/truseq_rna.fa.gz,/home/p860v026/temp/bbmap/resources/polyA.fa.gz k=13 ktrim=r useshortkmers=t mink=5 qtrim=r trimq=10 minlength=20
+$BBMAPFOLDER/bbduk.sh in=./reads/$1 out=./trimmed/$TRIMMEDNAME ref=$BBMAPFOLDER/resources/truseq_rna.fa.gz,$BBMAPFOLDER/resources/polyA.fa.gz k=13 ktrim=r useshortkmers=t mink=5 qtrim=r trimq=10 minlength=20
 
 
-SMALLNAME=$(perl -pe 's/_/zaba/ ; s/_// ; s/_.+// ; s/zaba/_/' <(echo $1))
+SMALLNAME=$(perl -pe 's/.fq.gz//' <(echo $1))
 
 echo $SMALLNAME 
 
 
 
 
-/home/p860v026/temp/STAR/source/STAR --runThreadN 8 --genomeDir ./star_v5_genome/  --readFilesIn ./trimmed/$TRIMMEDNAME --outFilterType BySJout --outFilterMultimapNmax 20 --alignSJoverhangMin 8 --alignSJDBoverhangMin 1 --outFilterMismatchNmax 999 --outFilterMismatchNoverLmax 0.1 --alignIntronMin 20  --alignIntronMax 1000000 --alignMatesGapMax 1000000 --outSAMattributes NH HI NM MD --outSAMtype BAM SortedByCoordinate --outFileNamePrefix ./mapped/$SMALLNAME
+$STAREXEC --runThreadN 8 --genomeDir ./star_v5_genome/  --readFilesIn ./trimmed/$TRIMMEDNAME --outFilterType BySJout --outFilterMultimapNmax 20 --alignSJoverhangMin 8 --alignSJDBoverhangMin 1 --outFilterMismatchNmax 999 --outFilterMismatchNoverLmax 0.1 --alignIntronMin 20  --alignIntronMax 1000000 --alignMatesGapMax 1000000 --outSAMattributes NH HI NM MD --outSAMtype BAM SortedByCoordinate --outFileNamePrefix ./mapped/$SMALLNAME
 
 cd mapped
 samtools index $SMALLNAME\Aligned.sortedByCoord.out.bam
 cd ..
 
-htseq-count -m intersection-nonempty -s yes -f bam -r pos -t exon -i Parent ./mapped/$SMALLNAME\Aligned.sortedByCoord.out.bam /home/p860v026/temp/Mgutv5/annotation/MguttatusTOL_551_v5.0.gene_exons.gff3 > ./counts/$SMALLNAME\_counts.txt
+htseq-count -m intersection-nonempty -s yes -f bam -r pos -t exon -i Parent ./mapped/$SMALLNAME\Aligned.sortedByCoord.out.bam $GFFFILE > ./counts/$SMALLNAME\_counts.txt
 
 
 

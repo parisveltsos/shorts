@@ -13,24 +13,30 @@ cd /home/p860v026/temp/3prime
 STAREXEC=/home/p860v026/temp/bin/STAR/source/STAR
 BBMAPFOLDER=/home/p860v026/temp/bbmap
 
+# GFFFILE=/home/p860v026/temp/bin/flo/flo_mimulus/results/664_85_recover_lifted_exon.gff3
+# GENOMEFILE=/home/p860v026/temp/IM664/664.contigs.fa
+# STARGENOMEFOLDER=star_664_genome
+# GENOMENAME=664
+
 GFFFILE=/home/p860v026/temp/bin/flo/flo_mimulus/results/664_85_recover_lifted_exon.gff3
-GENOMEFILE=/home/p860v026/temp/IM664/664.contigs.fa
+GENOMEFILE=/home/p860v026/temp/genomes/Mgutv5/assembly/MguttatusTOL_551_v5.0.fa
+STARGENOMEFOLDER=star_v5_genome
+GENOMENAME=v5
 
-## RUN ONCE
 
-# mkdir star_664_genome
+## RUN ONCE PER GENOME
+
+# mkdir $STARGENOMEFOLDER
 
 # mkdir counts
 
 # generate genome index
-# $STAREXEC --runThreadN 8 --runMode genomeGenerate --genomeDir ./star_664_genome/ --genomeFastaFiles $GENOMEFILE --sjdbGTFfile $GFFFILE --sjdbGTFtagExonParentTranscript Parent --sjdbOverhang 74 --genomeSAindexNbases 13
+# $STAREXEC --runThreadN 8 --runMode genomeGenerate --genomeDir ./$STARGENOMEFOLDER/ --genomeFastaFiles $GENOMEFILE --sjdbGTFfile $GFFFILE --sjdbGTFtagExonParentTranscript Parent --sjdbOverhang 74 --genomeSAindexNbases 13
 
 
+## RUN ONCE PER READ FILE
 
-
-## RUN PER READ FILE
-
-#  ls /home/p860v026/temp/3prime/reads > listbbblue
+#  lss /home/p860v026/temp/3prime/reads > listbbblue
 #  vim listbbblue
 #  for i in $(cat listbbblue); do sbatch ~/code/htseq_count.sh $i; done
 
@@ -43,51 +49,46 @@ TRIMMEDNAME=$(perl -pe 's/.gz//' <(echo $1))
 $BBMAPFOLDER/bbduk.sh in=./reads/$1 out=./trimmed/$TRIMMEDNAME ref=$BBMAPFOLDER/resources/truseq_rna.fa.gz,$BBMAPFOLDER/resources/polyA.fa.gz k=13 ktrim=r useshortkmers=t mink=5 qtrim=r trimq=10 minlength=20
 
 
-SMALLNAME=$(perl -pe 's/.fq.gz//' <(echo $1))
+## RUN ONCE PER READ BY GENOME COMBINATION
+
+SMALLNAME=$(perl -pe 's/.fastq.gz//' <(echo $1))
 
 echo $SMALLNAME 
 
+mkdir mapped_to_$GENOMENAME
 
 
+$STAREXEC --runThreadN 8 --genomeDir ./$STARGENOMEFOLDER/  --readFilesIn ./trimmed/$TRIMMEDNAME --outFilterType BySJout --outFilterMultimapNmax 20 --alignSJoverhangMin 8 --alignSJDBoverhangMin 1 --outFilterMismatchNmax 999 --outFilterMismatchNoverLmax 0.1 --alignIntronMin 20  --alignIntronMax 1000000 --alignMatesGapMax 1000000 --outSAMattributes NH HI NM MD --outSAMtype BAM SortedByCoordinate --outFileNamePrefix ./mapped_to_$GENOMENAME/$SMALLNAME
 
-$STAREXEC --runThreadN 8 --genomeDir ./star_v5_genome/  --readFilesIn ./trimmed/$TRIMMEDNAME --outFilterType BySJout --outFilterMultimapNmax 20 --alignSJoverhangMin 8 --alignSJDBoverhangMin 1 --outFilterMismatchNmax 999 --outFilterMismatchNoverLmax 0.1 --alignIntronMin 20  --alignIntronMax 1000000 --alignMatesGapMax 1000000 --outSAMattributes NH HI NM MD --outSAMtype BAM SortedByCoordinate --outFileNamePrefix ./mapped/$SMALLNAME
-
-cd mapped
-samtools index $SMALLNAME\Aligned.sortedByCoord.out.bam
+cd mapped_to_$GENOMENAME
+mv $SMALLNAME\Aligned.sortedByCoord.out.bam $SMALLNAME.bam
+samtools index $SMALLNAME.bam
+rm -rf $SMALLNAME\_STARtmp
 cd ..
 
-htseq-count -m intersection-nonempty -s yes -f bam -r pos -t exon -i Parent ./mapped/$SMALLNAME\Aligned.sortedByCoord.out.bam $GFFFILE > ./counts/$SMALLNAME\_counts.txt
+mkdir counts_to_$GENOMENAME
+
+htseq-count -m intersection-nonempty -s yes -f bam -r pos -t exon -i gene ./mapped_to_$GENOMENAME/$SMALLNAME.bam $GFFFILE > ./counts_to_$GENOMENAME/$SMALLNAME\_counts.txt
 
 
 
 
 ## COMBINE ALL COUNTS
-# mkdir temp
+# mkdir temp_count
 # 
 # # filenames in first line
-# cd counts
-# for i in *.txt ; do echo -e "gene\t$i" | cat - $i > temp && mv temp $i; done
+# cd counts_to_$GENOMENAME
+# for i in *.txt ; do echo -e "gene\t$i" | cat - $i > temp_count && mv temp_count $i; done
 # cd ..
 # 
 # # counts per file 
-# for i in $(ls counts/* | perl -pe 's/counts\///'); do cut -f2 counts/$i > temp/$i; done
+# for i in $(ls counts_to_$GENOMENAME/* | perl -pe 's/counts\///'); do cut -f2 counts/$i > temp_count/$i; done
 # 
 # # rownames from first file
-# for i in $(ls counts/* | perl -pe 's/counts\///' | head -1); do cut -f1 counts/$i > temp/0count.txt; done
+# for i in $(ls counts_to_$GENOMENAME/* | perl -pe 's/counts\///' | head -1); do cut -f1 counts/$i > temp_count/0count.txt; done
 # 
 # # combine columns, simplify names, remove last 5 rows with summary
-# paste temp/*.txt | perl -pe 's/_counts.txt//g ; s/.v5.0//' | head -n -5 > final_count.txt
+# paste temp_count/*.txt | perl -pe 's/_counts.txt//g ; s/.v5.0//' | head -n -5 > final_count.txt
 
-# Transpose file in BBedit, and remove L001 and L002 from the names
-# in R
 
-# datapath <- "~/Downloads"
-# kdata <- read.table(file.path(datapath, "final_count.txt"), header=T)
-# str(kdata)
-# 
-# 
-# pool1Comb <- aggregate(.~gene,data=kdata,FUN=sum)
-# write.table(pool1Comb, file=file.path(datapath, "pool1Comb.txt"), quote=F, row.names=F, sep="\t")
-# simplify name _(.*?)\t
-# transpose
 # make matrix, count and design files

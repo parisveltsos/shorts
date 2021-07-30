@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=flo
-#SBATCH --partition=eeb      
+#SBATCH --partition=eeb
 #SBATCH --time=1-05:59:00        
 #SBATCH --mem-per-cpu=24g
 #SBATCH --mail-user=pveltsos@ku.edu
@@ -12,8 +12,8 @@ cd /home/p860v026/temp/bin/flo/flo_mimulus
 
 rake -f Rakefile
 
-NAME=1192to5_85
-GFFNAME=MguttatusTOL_551_v5.0.gene
+NAME=909to5_85
+GFFNAME=MguttatusTOL_551_v5.0.gene_exons
 
 cd run
 
@@ -21,15 +21,17 @@ mv liftover.chn $NAME.chn
 
 gzip $NAME.chn
 
-cd $GFFNAME
-
-ruby ../../gff_recover.rb lifted.gff3 > $NAME\lifted_cleaned.gff 2>$NAME\lifted_rubbish.gff
-
-cd ..
-
-mv $GFFNAME $NAME\_gff
-
-tar -zcvf $NAME\_gff.tar.gz $NAME\_gff/
-
-cp *.gz ../results/
+# cd $GFFNAME
+# 
+# ruby ../../gff_recover.rb lifted.gff3 > $NAME\lifted_cleaned.gff 2>$NAME\lifted_rubbish.gff
+# 
+# perl -pe 's/mRNA/gene/g ; s/...v5.0//g' $NAME\lifted_cleaned.gff > $NAME\lifted_cleaned_mRNAtoGene2.gff
+# 
+# cd ..
+# 
+# mv $GFFNAME $NAME\_gff
+# 
+# tar -zcvf $NAME\_gff.tar.gz $NAME\_gff/
+# 
+# cp *.gz ../results/
 

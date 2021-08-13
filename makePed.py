@@ -1,7 +1,7 @@
 import sys
 
 if len(sys.argv)!=5:
-	print "\nUsage: \npython makePed.py mother father family vcf\npython makePed.py 664-P5_S35.sorted.bam 767-P2_S43.sorted.bam 664 pool1.vcf\n\nAlso need key.txt file\n"
+	print "\nUsage: \npython makePed.py mother father family vcf\npython makePed.py 664-P5.bam 767-P2.bam 664 pool1.vcf\n\nAlso need key_pool1.txt file\n"
 	sys.exit()
 	
 mother = sys.argv[1]
@@ -16,7 +16,8 @@ x767 = []
 xline = []
 xF2 = []
 
-in_key = open("key.txt","r")
+in_key = open("key_" + sys.argv[4].split(".")[0] + ".txt","r")
+# key needs to be made from family-specific vcf
 
 for line_idx, line in enumerate(in_key):
 	cols = line.replace('\n', '').split('\t') 

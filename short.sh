@@ -1,12 +1,12 @@
 #!/bin/bash
 #SBATCH --job-name=short              # Job name
-#SBATCH --partition=kelly           # Partition Name (Required)
+#SBATCH --partition=sixhour           # Partition Name (Required)
 #SBATCH --mail-type=END,FAIL          # Mail events (NONE, BEGIN, END, FAIL, ALL)
-#SBATCH --mail-user=pveltsos@ku.edu   # Where to send mail 
+#SBATCH --mail-user=pveltsos@ku.edu      # Where to send mail
 #SBATCH --ntasks=1                          # Run on a single CPU
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=1g                     # Job memory request
-#SBATCH --time=2-05:59:00             # Time limit days-hrs:min:sec
+#SBATCH --time=0-05:59:00             # Time limit days-hrs:min:sec
 #SBATCH --output=short_%j.log         # Standard output and error log
 
 echo "Running"
@@ -15,9 +15,9 @@ PBFOLDER=/home/p860v026/temp/pacbioSV
 NAME=767
 CHROM=06
 
-cd /home/p860v026/temp/IM444
+cd /home/p860v026/temp/3prime
 
-gunzip 444.fastq.gz 
+python ~/code/analyzeF2.py 1192
 
 # rm -rf IM909
 

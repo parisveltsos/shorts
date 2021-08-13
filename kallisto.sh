@@ -45,7 +45,7 @@ kallisto quant -i primaryTscp --single -l 150 -s 20 -o $READNAME $READDIR/$1
 
 #	for i in $(ls | grep txt); do cat <(echo $i | perl -pe 's/.txt//') <(tail -n +2 $i) > $i\_count.txt; done
 
-#	cut -f1 909-P16-R2/abundance.tsv > 1count.txt
+#	cut -f1 909-P16-R2/abundance.tsv > 0count.txt
 
 #	paste *count* > ktable.txt
 

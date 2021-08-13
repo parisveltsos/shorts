@@ -10,9 +10,9 @@
 
 cd /home/p860v026/temp/3prime/mapped
 
-GENOMEFILE=664.contigs.fa
-GENOMEFOLDER=/home/p860v026/temp/IM664
-GENOMENAME=664
+GENOMEFILE=MguttatusTOL_551_v5.0.fa
+GENOMEFOLDER=/home/p860v026/temp/genomes/Mgutv5/assembly
+GENOMENAME=v5
 
 module load samtools
 

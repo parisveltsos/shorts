@@ -7,7 +7,7 @@ hdata <- read.table(hetName, header=T)
 kdata <- read.table(keyName, header=T)
 
 # Manual data read
-# datapath <- "~/Desktop"
+# datapath <- "~/Downloads"
 # hdata <- read.table(file.path(datapath, "het_small.txt"), header=T)
 # kdata <- read.table(file.path(datapath, "key_small.txt"), header=T)
 
@@ -25,6 +25,14 @@ merged1$het <- merged1$X01 /(merged1$X11 + merged1$X01 + merged1$X00)
 merged1$totals <- merged1$X11 + merged1$X01 + merged1$X00
 merged1$fam <- merged1$family.x
 attach(merged1)
+
+head(data.frame(merged1[order(merged1$rhomo, decreasing=T),]), 10)
+
+sumdata<- data.frame(round(tapply(rhomo, list(fam), mean), digits=2))
+sumdata$sd <- round(tapply(rhomo, list(fam), sd), digits=2)
+colnames(sumdata) <- c('mean', 'sd')
+sumdata
+
 
 pdf(paste(outName,"_out.pdf", sep=""), width=9, height=9)
 par(mfrow=c(2,2)) 

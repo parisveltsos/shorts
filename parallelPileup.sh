@@ -61,4 +61,4 @@ cat <(grep '#' tig00000003_1:3000001-4000000.vcf) <(grep -v '#' *.vcf | perl -pe
 
 mv $GENOMENAME $GENOMENAME.vcf
 
-grep CHROM $GENOMENAME.vcf | perl ~/code/transposeTabDelimited.pl > prekey.txt
+python ~/code/makeKey.py $GENOMENAME.vcf

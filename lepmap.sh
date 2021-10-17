@@ -14,7 +14,7 @@
 # 	cd /home/p860v026/temp/3prime/mapped_to_$LINE
 # 	mkdir LM$LINE
 # 	cd LM$LINE
-# 	cp ../../key.txt .
+# 	cp ../key_$LINE.txt .
 # 	cp ../../1192clean.vcf .
 # 	python ~/code/makePed.py 1192-P.bam 767-P.bam $LINE 1192clean.vcf
 # # 	

@@ -8,13 +8,14 @@
 #SBATCH --time=00-05:50:00             # Time limit days-hrs:min:sec
 #SBATCH --output=vcf_%j.log   # Standard output and error log
 
-# GENOMENAME=1192
-# GENOMEFILE=1192purged2.fa
-# GENOMEFOLDER=/home/p860v026/temp/IM1192/purge2
+GENOMENAME=1192
+GENOMEFILE=1192purged2.fa
+GENOMEFOLDER=/home/p860v026/temp/IM1192/purge2
+diskutil unmount /Volumes/2nd\ backup
 
-GENOMENAME=909
-GENOMEFILE=909purged2.fa
-GENOMEFOLDER=/home/p860v026/temp/IM909/purge2
+# GENOMENAME=909
+# GENOMEFILE=909purged2.fa
+# GENOMEFOLDER=/home/p860v026/temp/IM909/purge2
 
 # GENOMENAME=v5
 # GENOMEFILE=MguttatusTOL_551_v5.0.fa
@@ -50,6 +51,9 @@ GENOMEFOLDER=/home/p860v026/temp/IM909/purge2
 # cd /home/p860v026/temp/3prime/mapped_to_$GENOMENAME
 # 
 # bcftools mpileup -Ou -I -a FORMAT/AD -f $GENOMEFOLDER/$GENOMEFILE -r ${1} -b <(ls *.bam) | bcftools call -vmO v -o ${1}.vcf
+
+
+
 
 
 

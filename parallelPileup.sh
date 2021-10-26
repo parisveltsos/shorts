@@ -1,17 +1,16 @@
 #!/bin/bash -l
 #SBATCH --job-name=vcf1192             # Job name
-#SBATCH --partition=sixhour	     # Partition Name (Required)
+#SBATCH --partition=kelly	     # Partition Name (Required)
 #SBATCH --mail-user=pveltsos@ku.edu      # Where to send mail
 #SBATCH --ntasks=1                   # Run on a single CPU
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=2gb                     # Job memory request
-#SBATCH --time=00-05:50:00             # Time limit days-hrs:min:sec
+#SBATCH --time=01-05:50:00             # Time limit days-hrs:min:sec
 #SBATCH --output=vcf_%j.log   # Standard output and error log
 
 GENOMENAME=1192
 GENOMEFILE=1192purged2.fa
 GENOMEFOLDER=/home/p860v026/temp/IM1192/purge2
-diskutil unmount /Volumes/2nd\ backup
 
 # GENOMENAME=909
 # GENOMEFILE=909purged2.fa
@@ -35,7 +34,7 @@ diskutil unmount /Volumes/2nd\ backup
 # for i in $(cat /home/p860v026/temp/3prime/star_$GENOMENAME\_genome/split.chr.bed); do sbatch ~/code/parallelPileup.sh $i; done
 
 # test run 
-# sbatch ~/code/parallelPileup.sh tig00000712_1:1-1140
+# sbatch ~/code/parallelPileup.sh tig00000008_1:1000001-2000000
 
 
 

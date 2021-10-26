@@ -1,6 +1,6 @@
 #!/bin/bash -l
 #SBATCH --job-name=cnt1192		    # Job name
-#SBATCH --partition=sixhour           # Partition Name (Required)
+#SBATCH --partition=sixhour           # Partition Name (Required) sixhour kelly
 #SBATCH --mail-user=pveltsos@ku.edu      # Where to send mail
 #SBATCH --ntasks=1                   # Run on a single CPU
 #SBATCH --cpus-per-task=8
@@ -47,10 +47,13 @@ GENOMENAME=1192
 # $STAREXEC --runThreadN 8 --runMode genomeGenerate --genomeDir ./$STARGENOMEFOLDER/ --genomeFastaFiles $GENOMEFILE --sjdbGTFfile $GFFFILE --sjdbGTFtagExonParentTranscript Parent --sjdbOverhang 74 --genomeSAindexNbases 13
 
 
-
-#  lss /home/p860v026/temp/3prime/trimmed > list6hr
-#  vim list6hr
-#  for i in $(cat listjkq); do sbatch ~/code/htseq_count.sh $i; done
+#  cd ~/code 
+#  ls -laSh /home/p860v026/temp/3prime/trimmed > list6hr
+#  vim list6hr     
+	# split to listjk >3Gb and list6hr
+	# make listest to try everything works before submitting big job
+#  for i in $(cat listredo); do sbatch ~/code/htseq_count.sh $i; done
+	# Once run check no empty bams produced, see readme
 
 
 
@@ -86,7 +89,7 @@ $STAREXEC --runThreadN 8 --genomeDir ./$STARGENOMEFOLDER/ --readFilesCommand zca
 cd mapped_to_$GENOMENAME
 mv $SMALLNAME\Aligned.sortedByCoord.out.bam $SMALLNAME.bam
 samtools index $SMALLNAME.bam
-rm -rf $SMALLNAME\_STARtmp
+rm -rf $SMALLNAME\_STARtmp 
 cd ..
 
 mkdir counts_to_$GENOMENAME
@@ -102,9 +105,10 @@ htseq-count -m intersection-nonempty -s yes -f bam -r pos -t gene -i ID ./mapped
 
 ## COMBINE ALL COUNTS
 
+# cd /home/p860v026/temp/3prime
 # mkdir temp_count
-
-## filenames in first line
+# 
+# # filenames in first line
 # cd counts_to_$GENOMENAME
 # for i in *.txt ; do echo -e "gene\t$i" | cat - $i > temp_count && mv temp_count $i; done
 # 
@@ -118,5 +122,5 @@ htseq-count -m intersection-nonempty -s yes -f bam -r pos -t gene -i ID ./mapped
 # # combine columns, simplify names, remove last 5 rows with summary
 # paste temp_count/*.txt | perl -pe 's/_counts.txt//g' | head -n -5 > $GENOMENAME\_final_count.txt
 # rm -rf temp_count
-
+# 
 # make matrix, count and design files

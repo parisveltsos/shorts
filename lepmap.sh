@@ -22,51 +22,68 @@
 
 # make clean vcf
 
+	LINE=62
+	
+# Make linkage file from genotypes
+
+# perl ~/git/shorts/transposeTabDelimited.pl $LINE.geno.v5.txt | perl -pe 's/^/1\t/ ; s/.bam/\t'$LINE'\tIM767\t1\t0/g ; s/1\/1/1 1/g ; s/0\/1/1 2/g ; s/0\/0/2 2/g ; s/\.\/\./0 0/g' > $LINE.linkage
+
+	# Fix parent lines in linkage file
+		# Remove first 4 lines
+		# Add 0	0	2	0 to IM767 and 0	0	1	0 to LINE parent
+
+# Make snp info from genotypes
+
+# cut -f 1,2,3,4 $LINE.geno.v5.txt | grep -v contig | nl | perl -pe 's/ +/\t/g ; s/^\t//' > $LINE.markerNames.txt
+
 	
 # LEP-MAP3
 
-	LINE=1192
-
 	module load java
-	cd /home/p860v026/temp/3prime/mapped_to_$LINE/LM$LINE
-	
+#	cd /home/p860v026/temp/3prime/mapped_to_$LINE/LM$LINE
+		
+	awk -f ~/bin/lm3/LMscripts/linkage2post.awk $LINE.linkage | java -cp ~/bin/lm3/LMscripts Transpose > goodF2.post
+		
 	# make call file
-#  	java -cp ~/bin/lm3/bin ParentCall2 data=$LINE\ped.txt vcfFile=$LINE\clean.vcf removeNonInformative=1 > $LINE.call 
+#	java -cp ~/bin/lm3/bin ParentCall2 data=$LINE\ped.txt vcfFile=$LINE\clean.vcf removeNonInformative=1 > $LINE.call 
+	java -cp ~/bin/lm3/bin ParentCall2 data=goodF2.post removeNonInformative=1 > $LINE.call 
 
 	# remove non informative markers
-# 	java -cp ~/bin/lm3/bin Filtering2 data=$LINE.call dataTolerance=0.01 > $LINE\filt.call 
+	java -cp ~/bin/lm3/bin Filtering2 data=$LINE.call dataTolerance=0.01 > $LINE\filt.call 
 
-# 	cat $LINE\filt.call | cut -f 1,2| awk '(NR>=7)' > $LINE\filtsnps.txt
+	cat $LINE\filt.call | cut -f 1,2| awk '(NR>=7)' > $LINE\filtsnps.txt
 
-	# separate chromosomes
-	LOD=19 # mixed 15, 16, 19, 10 ok, 11 ok, 12, 11 
-# 	java -cp ~/bin/lm3/bin SeparateChromosomes2 data=$LINE\filt.call lodLimit=$LOD > $LINE\map$LOD.txt
+#	separate chromosomes
+	LOD=12 # 1192 14 good
+	java -cp ~/bin/lm3/bin SeparateChromosomes2 data=$LINE\filt.call lodLimit=$LOD > $LINE\map$LOD.txt
 
-# 	sort $LINE\map$LOD.txt | uniq -c | sort -n > $LINE\_lod$LOD\_lgs.txt
+	sort $LINE\map$LOD.txt | uniq -c | sort -n > $LINE\_lod$LOD\_lgs.txt
+
+	tail -20 $LINE\_lod$LOD\_lgs.txt
 
 
 
 # 	order markers
-	java -cp ~/bin/lm3/bin OrderMarkers2 grandparentPhase=1 sexAveraged=1 data=$LINE\filt.call map= $LINE\map$LOD.txt > $LINE\order$LOD.txt 
+	java -cp ~/bin/lm3/bin OrderMarkers2 sexAveraged=1 data=$LINE\filt.call map= $LINE\map$LOD.txt > $LINE\order$LOD.txt 
 # 
 	awk -vFS="\t" -vOFS="\t" '(NR==FNR){s[NR-1]=$0}(NR!=FNR){if ($1 in s) $1=s[$1];print}' $LINE\filtsnps.txt $LINE\order$LOD.txt > $LINE\order$LOD.mapped
 
+# Make cm file
+	cut -f 1,2 $LINE\order$LOD.txt | grep -v '#' > temp_cm.txt
+	python ~/code/makeCM.py temp_cm.txt
+	
+# Merge files to make bpcmData
 
-# mixed here
-# 	
-# 
-# 	 
-# export data for plotting 
-python ~/code/lm2bpcm.py $LINE $LOD
-# 	
-# Make plots
-module load R
-Rscript ~/code/bpcmPlot.r $LINE $LOD
-# 	
+ cat <(echo -e 'snp\tlg\tcm\tcontig\tbp\tref\talt') <(join  -1 2 -2 1 <(sort out_temp_cm.txt -k2) <(sort $LINE.markerNames.txt) ) > $LINE\_$LOD\_bpcmData.txt
+
+# Make plot
+	
+	module load R
+	Rscript ~/code/bpcmPlot.r $LINE $LOD
+
+# compress for export 
+
 tar -zcvf lgs$LINE\_$LOD.tar.gz *.pdf
-# 	
-# 	
-# 	
 	
 	
 	

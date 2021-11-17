@@ -1,5 +1,5 @@
 #!/bin/bash -l
-#SBATCH --job-name=cnt1192		    # Job name
+#SBATCH --job-name=cnt909	    # Job name
 #SBATCH --partition=sixhour           # Partition Name (Required) sixhour kelly
 #SBATCH --mail-user=pveltsos@ku.edu      # Where to send mail
 #SBATCH --ntasks=1                   # Run on a single CPU
@@ -23,15 +23,15 @@ BBMAPFOLDER=/home/p860v026/temp/bbmap
 # STARGENOMEFOLDER=star_664_18_genome
 # GENOMENAME=664_18
 
-# GFFFILE=/home/p860v026/temp/bin/flo/flo_mimulus/results/909to5_85_gff/909to5_85lifted_cleaned_mRNAtoGene2.gff
-# GENOMEFILE=/home/p860v026/temp/IM909/purge2/909purged2.fa
-# STARGENOMEFOLDER=star_909_genome
-# GENOMENAME=909
+GFFFILE=/home/p860v026/temp/bin/flo/flo_mimulus/results/909to5_85_gff/909to5_85lifted_cleaned_mRNAtoGene2.gff
+GENOMEFILE=/home/p860v026/temp/IM909/purge2/909purged2.fa
+STARGENOMEFOLDER=star_909_genome
+GENOMENAME=909
 
-GFFFILE=/home/p860v026/temp/bin/flo/flo_mimulus/results/1192to5_85_gff/1192to5_85lifted_cleaned_mRNAtoGene2.gff
-GENOMEFILE=/home/p860v026/temp/IM1192/purge2/1192purged2.fa
-STARGENOMEFOLDER=star_1192_genome
-GENOMENAME=1192
+# GFFFILE=/home/p860v026/temp/bin/flo/flo_mimulus/results/1192to5_85_gff/1192to5_85lifted_cleaned_mRNAtoGene2.gff
+# GENOMEFILE=/home/p860v026/temp/IM1192/purge2/1192purged2.fa
+# STARGENOMEFOLDER=star_1192_genome
+# GENOMENAME=1192
 
 # GFFFILE=/home/p860v026/temp/genomes/Mgutv5/annotation/MguttatusTOL_551_v5.0.gene_exons.gff3
 # GENOMEFILE=/home/p860v026/temp/genomes/Mgutv5/assembly/MguttatusTOL_551_v5.0.fa
@@ -52,7 +52,7 @@ GENOMENAME=1192
 #  vim list6hr     
 	# split to listjk >3Gb and list6hr
 	# make listest to try everything works before submitting big job
-#  for i in $(cat listredo); do sbatch ~/code/htseq_count.sh $i; done
+#  for i in $(cat list6hr); do sbatch ~/code/htseq_count.sh $i; done
 	# Once run check no empty bams produced, see readme
 
 

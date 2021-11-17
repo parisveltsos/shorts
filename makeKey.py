@@ -25,7 +25,7 @@ for line_idx, line in enumerate(in_vcf):
 				if cols[j].split("-")[0]!="767" and cols[j].split("-")[1][0]=="P":
 					out_key.write("Parental_line"+"\n")
 				elif cols[j].split("-")[0]=="767" and cols[j].split("-")[1][0]=="P":
-					out_key.write("767"+"\n")
+					out_key.write("Parental_line"+"\n")
 				else:
 					out_key.write("F2"+"\n")
-
+			break

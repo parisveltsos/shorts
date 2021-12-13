@@ -10,10 +10,16 @@
 
 cd /home/p860v026/temp/bin/flo/flo_mimulus
 
+# This script generates chain file and transfers gff to new genome
+# need to edit /home/p860v026/temp/bin/flo/flo_mimulus/flo_opts.yaml before running.
+# Also delete the run folder if it exists in /home/p860v026/temp/bin/flo/flo_mimulus 
+# Also edit NAME below
+
+
 rake -f Rakefile
 
-NAME=664_85_np
-GFFNAME=MguttatusTOL_551_v5.0.gene_exons
+NAME=767_np
+GFFNAME=MguttatusTOL_551_v5.0.gene_exons.gff3
 
 cd run
 
@@ -37,3 +43,4 @@ tar -zcvf $NAME\_gff.tar.gz $NAME\_gff/
 
 cp *.gz ../results/
 
+# rm -rf run/

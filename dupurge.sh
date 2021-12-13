@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=duprg1034              # Job name
+#SBATCH --job-name=duprg767              # Job name
 #SBATCH --partition=eeb # partition Name (Required) eeb sixhour
 #SBATCH --mail-type=END,FAIL          # Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=pveltsos@ku.edu   # Where to send mail 
@@ -9,10 +9,11 @@
 #SBATCH --time=1-05:59:00             # Time limit days-hrs:min:sec
 #SBATCH --output=out_purge_%j.log         # Standard output and error log
 
-GFOLDER=/home/p860v026/temp/IM1034
-GNAME=1034.contigs.fasta
-READS=1034.fastq.gz
-OUTNAME=1034
+PURGEDUPSFOLDER=/home/p860v026/bin/purge_dups/bin
+GFOLDER=/home/p860v026/temp/IM767
+GNAME=767.contigs.fasta
+READS=767.fasta.gz
+OUTNAME=767
 
 module load python
 
@@ -20,19 +21,19 @@ cd $GFOLDER
 
 ~/bin/minimap2 -t 12 -xmap-pb $GNAME $READS | gzip -c - > $OUTNAME.paf.gz
 
-/home/p860v026/temp/bin/purge_dups/bin/pbcstat $OUTNAME.paf.gz
+$PURGEDUPSFOLDER/pbcstat $OUTNAME.paf.gz
 
-/home/p860v026/temp/bin/purge_dups/bin/calcuts PB.stat > cutoffs 2>calcults.log
+$PURGEDUPSFOLDER/calcuts PB.stat > cutoffs 2>calcults.log
 
-/home/p860v026/temp/bin/purge_dups/bin/split_fa $GNAME > $OUTNAME.split
+$PURGEDUPSFOLDER/split_fa $GNAME > $OUTNAME.split
 
 ~/bin/minimap2 -t 12 -xasm5 -DP $OUTNAME.split $OUTNAME.split | gzip -c - > $OUTNAME.split.self.paf.gz
 
-/home/p860v026/temp/bin/purge_dups/bin/purge_dups -2 -T cutoffs -c PB.base.cov $OUTNAME.split.self.paf.gz > dups.bed 2> purge_dups.log
+$PURGEDUPSFOLDER/purge_dups -2 -T cutoffs -c PB.base.cov $OUTNAME.split.self.paf.gz > dups.bed 2> purge_dups.log
 
-/home/p860v026/temp/bin/purge_dups/bin/get_seqs -e dups.bed $GNAME  
+$PURGEDUPSFOLDER/get_seqs -e dups.bed $GNAME  
 
-/home/p860v026/temp/bin/purge_dups/scripts/hist_plot.py PB.stat $OUTNAME
+$PURGEDUPSFOLDER/hist_plot.py PB.stat $OUTNAME
 
 mkdir purge1
 
@@ -52,19 +53,19 @@ rm *split*
 
 ~/bin/minimap2 -t 12 -xmap-pb $OUTNAME\PlusPurged.fasta $READS | gzip -c - > $OUTNAME\PlusPurged.paf.gz
 
-/home/p860v026/temp/bin/purge_dups/bin/pbcstat $OUTNAME\PlusPurged.paf.gz
+$PURGEDUPSFOLDER/pbcstat $OUTNAME\PlusPurged.paf.gz
 
-/home/p860v026/temp/bin/purge_dups/bin/calcuts PB.stat > cutoffs 2>calcults.log
+$PURGEDUPSFOLDER/calcuts PB.stat > cutoffs 2>calcults.log
 
-/home/p860v026/temp/bin/purge_dups/bin/split_fa $OUTNAME\PlusPurged.fasta > $OUTNAME\PlusPurged.split
+$PURGEDUPSFOLDER/split_fa $OUTNAME\PlusPurged.fasta > $OUTNAME\PlusPurged.split
 
 ~/bin/minimap2 -t 12 -xasm5 -DP $OUTNAME\PlusPurged.split $OUTNAME\PlusPurged.split | gzip -c - > $OUTNAME\PlusPurged.split.self.paf.gz
 
-/home/p860v026/temp/bin/purge_dups/bin/purge_dups -2 -T cutoffs -c PB.base.cov $OUTNAME\PlusPurged.split.self.paf.gz > dups.bed 2> purge_dups.log
+$PURGEDUPSFOLDER/purge_dups -2 -T cutoffs -c PB.base.cov $OUTNAME\PlusPurged.split.self.paf.gz > dups.bed 2> purge_dups.log
 
-/home/p860v026/temp/bin/purge_dups/bin/get_seqs -e dups.bed $OUTNAME\PlusPurged.fasta   
+$PURGEDUPSFOLDER/get_seqs -e dups.bed $OUTNAME\PlusPurged.fasta   
 
-/home/p860v026/temp/bin/purge_dups/scripts/hist_plot.py PB.stat $OUTNAME\PlusPurged
+$PURGEDUPSFOLDER/hist_plot.py PB.stat $OUTNAME\PlusPurged
 
 mkdir purge2
 

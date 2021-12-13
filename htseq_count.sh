@@ -1,6 +1,6 @@
 #!/bin/bash -l
-#SBATCH --job-name=cnt909	    # Job name
-#SBATCH --partition=sixhour           # Partition Name (Required) sixhour kelly
+#SBATCH --job-name=cntV5	    # Job name
+#SBATCH --partition=sixhour # Partition Name (Required) sixhour kelly
 #SBATCH --mail-user=pveltsos@ku.edu      # Where to send mail
 #SBATCH --ntasks=1                   # Run on a single CPU
 #SBATCH --cpus-per-task=8
@@ -12,6 +12,7 @@ cd /home/p860v026/temp/3prime
 
 STAREXEC=/home/p860v026/temp/bin/STAR/source/STAR
 BBMAPFOLDER=/home/p860v026/temp/bbmap
+HTSEQFOLDER=/home/p860v026/.local/bin
 
 # GFFFILE=WAITING
 # GENOMEFILE=/home/p860v026/temp/IM664/664.contigs.fa
@@ -23,20 +24,20 @@ BBMAPFOLDER=/home/p860v026/temp/bbmap
 # STARGENOMEFOLDER=star_664_18_genome
 # GENOMENAME=664_18
 
-GFFFILE=/home/p860v026/temp/bin/flo/flo_mimulus/results/909to5_85_gff/909to5_85lifted_cleaned_mRNAtoGene2.gff
-GENOMEFILE=/home/p860v026/temp/IM909/purge2/909purged2.fa
-STARGENOMEFOLDER=star_909_genome
-GENOMENAME=909
+# GFFFILE=/home/p860v026/temp/bin/flo/flo_mimulus/results/909to5_85_gff/909to5_85lifted_cleaned_mRNAtoGene2.gff
+# GENOMEFILE=/home/p860v026/temp/IM909/purge2/909purged2.fa
+# STARGENOMEFOLDER=star_909_genome
+# GENOMENAME=909
 
 # GFFFILE=/home/p860v026/temp/bin/flo/flo_mimulus/results/1192to5_85_gff/1192to5_85lifted_cleaned_mRNAtoGene2.gff
 # GENOMEFILE=/home/p860v026/temp/IM1192/purge2/1192purged2.fa
 # STARGENOMEFOLDER=star_1192_genome
 # GENOMENAME=1192
 
-# GFFFILE=/home/p860v026/temp/genomes/Mgutv5/annotation/MguttatusTOL_551_v5.0.gene_exons.gff3
-# GENOMEFILE=/home/p860v026/temp/genomes/Mgutv5/assembly/MguttatusTOL_551_v5.0.fa
-# STARGENOMEFOLDER=star_v5_genome
-# GENOMENAME=v5
+GFFFILE=/home/p860v026/temp/genomes/Mgutv5/annotation/MguttatusTOL_551_v5.0.gene_exons.gff3
+GENOMEFILE=/home/p860v026/temp/genomes/Mgutv5/assembly/MguttatusTOL_551_v5.0.fa
+STARGENOMEFOLDER=star_v5_genome
+GENOMENAME=v5
 
 
 ## RUN ONCE PER GENOME # 5 min 8 Gb
@@ -52,7 +53,7 @@ GENOMENAME=909
 #  vim list6hr     
 	# split to listjk >3Gb and list6hr
 	# make listest to try everything works before submitting big job
-#  for i in $(cat list6hr); do sbatch ~/code/htseq_count.sh $i; done
+#  for i in $(cat listjkk); do sbatch ~/code/htseq_count.sh $i; done
 	# Once run check no empty bams produced, see readme
 
 
@@ -94,7 +95,7 @@ cd ..
 
 mkdir counts_to_$GENOMENAME
 
-htseq-count -m intersection-nonempty -s yes -f bam -r pos -t gene -i ID ./mapped_to_$GENOMENAME/$SMALLNAME.bam $GFFFILE > ./counts_to_$GENOMENAME/$SMALLNAME\_counts.txt
+$HTSEQFOLDER/htseq-count -m intersection-nonempty -s yes -f bam -r pos -t gene -i ID ./mapped_to_$GENOMENAME/$SMALLNAME.bam $GFFFILE > ./counts_to_$GENOMENAME/$SMALLNAME\_counts.txt
 
 
 

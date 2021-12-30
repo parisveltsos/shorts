@@ -1,4 +1,4 @@
-window_size = 1000000
+window_size = 100000
 
 out1 = open("split.chr.bed","w")
 

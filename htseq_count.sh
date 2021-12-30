@@ -53,7 +53,7 @@ GENOMENAME=v5
 #  vim list6hr     
 	# split to listjk >3Gb and list6hr
 	# make listest to try everything works before submitting big job
-#  for i in $(cat listjkk); do sbatch ~/code/htseq_count.sh $i; done
+#  for i in $(cat listUndone); do sbatch ~/code/htseq_count.sh $i; done
 	# Once run check no empty bams produced, see readme
 
 
@@ -71,7 +71,7 @@ TRIMMEDNAME=$(perl -pe 's/.gz//' <(echo $1))
 # $BBMAPFOLDER/bbduk.sh in=./reads/$1 out=./trimmed/$TRIMMEDNAME ref=$BBMAPFOLDER/resources/truseq_rna.fa.gz,$BBMAPFOLDER/resources/polyA.fa.gz k=13 ktrim=r useshortkmers=t mink=5 qtrim=r trimq=10 minlength=20
 # cd trimmed
 # gzip $TRIMMEDNAME
-# cd /home/p860v026/temp/3prime
+cd /home/p860v026/temp/3prime
 
 
 

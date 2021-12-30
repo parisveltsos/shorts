@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=bus1034              # Job name
+#SBATCH --job-name=bus1192              # Job name
 #SBATCH --partition=sixhour               # partition Name (Required) eeb sixhour
 #SBATCH --mail-type=END,FAIL          # Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=pveltsos@ku.edu   # Where to send mail 
@@ -11,9 +11,10 @@
 
 BUSCOSUPPORT=/home/p860v026/temp/bin/buscoSupport
 
-GFOLDER=/home/p860v026/temp/IM1034/purge2/
-# GNAME=1034.contigs.fasta
-GNAME=1034purged2.fa
+# GFOLDER=/temp/30day/kelly/p860v026/IM1192/purge1
+GFOLDER=/temp/30day/kelly/p860v026/genomes/Mgutv5/assembly/purge1
+# GNAME=1192.contigs.fasta 
+GNAME=v5purged1.fa
 
 module load busco
 

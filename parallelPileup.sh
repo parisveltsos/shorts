@@ -1,6 +1,6 @@
 #!/bin/bash -l
-#SBATCH --job-name=vcf909           # Job name
-#SBATCH --partition=kelly	     # Partition Name (Required)
+#SBATCH --job-name=vcfv5           # Job name
+#SBATCH --partition=eeb	     # Partition Name (Required)
 #SBATCH --mail-user=pveltsos@ku.edu      # Where to send mail
 #SBATCH --ntasks=1                   # Run on a single CPU
 #SBATCH --cpus-per-task=1
@@ -12,13 +12,13 @@
 # GENOMEFILE=1192purged2.fa
 # GENOMEFOLDER=/home/p860v026/temp/IM1192/purge2
 
-GENOMENAME=909
-GENOMEFILE=909purged2.fa
-GENOMEFOLDER=/home/p860v026/temp/IM909/purge2
+# GENOMENAME=909
+# GENOMEFILE=909purged2.fa
+# GENOMEFOLDER=/home/p860v026/temp/IM909/purge2
 
-# GENOMENAME=v5
-# GENOMEFILE=MguttatusTOL_551_v5.0.fa
-# GENOMEFOLDER=/home/p860v026/temp/genomes/Mgutv5/assembly
+GENOMENAME=v5
+GENOMEFILE=MguttatusTOL_551_v5.0.fa
+GENOMEFOLDER=/home/p860v026/temp/genomes/Mgutv5/assembly
 
 
 
@@ -51,7 +51,7 @@ GENOMEFOLDER=/home/p860v026/temp/IM909/purge2
 # cd /home/p860v026/temp/3prime/mapped_to_$GENOMENAME
 # 
 # bcftools mpileup -Ou -I -a FORMAT/AD -f $GENOMEFOLDER/$GENOMEFILE -r ${1} -b <(ls *.bam) | bcftools call -vmO v -o ${1}.vcf
-
+# 
 
 
 
@@ -62,7 +62,7 @@ GENOMEFOLDER=/home/p860v026/temp/IM909/purge2
 
 cd /home/p860v026/temp/3prime/mapped_to_$GENOMENAME
 
-cat <(grep '#' tig00000025_1:6000001-7000000.vcf) <(grep -v '#' *.vcf | perl -pe 's/.+vcf\://') > $GENOMENAME
+cat <(grep '#' Chr_13:13400001-13500000.vcf) <(grep -v '#' *.vcf | perl -pe 's/.+vcf\://') > $GENOMENAME
 
 mv $GENOMENAME $GENOMENAME.vcf
 

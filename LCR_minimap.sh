@@ -1,11 +1,11 @@
 #!/bin/bash
 #SBATCH --job-name=minimap
-#SBATCH --partition=sixhour      
-#SBATCH --time=0-05:59:00        
-#SBATCH --mem-per-cpu=2g  
+#SBATCH --partition=eeb      
+#SBATCH --time=2-05:59:00        
+#SBATCH --mem-per-cpu=4g  
 #SBATCH --mail-user=pveltsos@ku.edu    
 #SBATCH --ntasks=1                  
-#SBATCH --cpus-per-task=1            
+#SBATCH --cpus-per-task=2  # change this         
 #SBATCH --output=R-%x.%j.out
 #SBATCH --error=R-%x.%j.err
 
@@ -13,12 +13,13 @@ REF_FOLDER=/home/p860v026/temp/IM767/purge1
 REF_GENOME=767purged1.fa
 REF_GENOME_NAME=$(basename -s purged1.fa $REF_GENOME)
 
-QREAD_FOLDER=/home/p860v026/temp/IM909
+QREAD_FOLDER=/home/p860v026/temp/IM502
 
+LCONTIG=$1
 QREADS=$1
 QREADS_OUT=$(basename -s .fasta $QREADS)
-QREADS_NAME=909
-WDIR=909mapping
+QREADS_NAME=502
+WDIR=502mapping
 
 module load samtools
 
@@ -32,31 +33,31 @@ module load samtools
 
 # PART 1 SPLIT READS TO MANY FILES - 1 core sixhour
 
-cd $QREAD_FOLDER
+# cd $QREAD_FOLDER
+# 
+# ## unzip reads
+# 
+# gunzip $QREADS_NAME.fasta.gz
+# 
+# ## split to 250,000 sequences per file 
+# 
+# split -l 100000 $QREADS_NAME.fasta $QREADS_NAME\split_
+# 
+# # Make working folder
+# 
+# mkdir $WDIR
+# 
+# # Move split files to new folder
+# 
+# for i in $(find . -name '*split*'); do mv $i $WDIR/$i.fasta; done
+# 
+# # zip reads again 
+# 
+# gzip $QREADS_NAME.fasta
+# 
 
-## unzip reads
 
-gunzip $QREADS_NAME.fasta.gz
-
-## split to 250,000 sequences per file 
-
-split -l 100000 $QREADS_NAME.fasta $QREADS_NAME\split_
-
-# Make working folder
-
-mkdir $WDIR
-
-# Move split files to new folder
-
-for i in $(find . -name '*split*'); do mv $i $WDIR/$i.fasta; done
-
-# zip reads again 
-
-gzip $QREADS_NAME.fasta
-
-
-
-# PART 2 MAP EACH SPLIT FILE IN PARALLEL - 12 cores sixhour < 2hr
+# PART 2 MAP EACH SPLIT FILE IN PARALLEL - 12 cores sixhour < 2hr 8 - Gb memory
 
 # Run with 
 #	check fasta or fastq
@@ -90,7 +91,29 @@ gzip $QREADS_NAME.fasta
 
 # https://www.biostars.org/p/339434/
 
+# PART 5 Filtering - 2 cpu
+
+cd $QREAD_FOLDER/$WDIR
+
+## Split by chromosome
+
+# for i in $(cat listLongContigs); do sbatch ~/code/LCR_minimap.sh $i; done
+
+sbatch ~/code/LCR_minimap.sh $i
+
+## keep specific contig
+
+samtools view -bh $QREADS_NAME.bam $LCONTIG > $LCONTIG\_temp.bam
+
+samtools view -h $LCONTIG\_temp.bam > $LCONTIG\_temp.sam &
+
+samtools view -bSq 2 $LCONTIG\_temp.bam > $LCONTIG\_filtered.bam
+
+samtools index $LCONTIG\_filtered.bam &
+
+samtools view -h $LCONTIG\_filtered.bam > $LCONTIG\_filtered.sam
 
 
-
-
+# rm *bam*
+# rm *sam
+# rm R-*

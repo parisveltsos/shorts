@@ -1,0 +1,24 @@
+Run order	pools
+seq1		Mim1234
+seq2		Mim5678	Low counts
+seq3		Mim13101112
+seq4		Mim09141516 
+seq5		Mim17181920 - V Low counts - will redo
+seq6		Mim21222324
+
+seq7		Mim25262728 - in prep
+
+Pool 16 redo RNA boxes 1,2
+Pool 17 redo RNA boxes 2,3
+Pool 18 redo RNA box 4 + new samples
+
+
+# Sample names
+
+62-14a pool 5, 62-14b pool 5
+909-58 only use pool 17, pool 4a and pool5 b is one of them
+909-50 pool 4a and pool5b (missing)
+1192-39 pool 4a and pool5b (missing)
+1192-P4 pool 2a and pool6b (missing)
+1192-P6 pool 2a and pool6b (missing)
+155-82 has file but not in excel

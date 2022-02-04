@@ -11,14 +11,14 @@
 
 BUSCOSUPPORT=/home/p860v026/temp/bin/buscoSupport
 
-GFOLDER=/home/p860v026/temp/IM664
-GNAME=664.contigs.fasta
+GFOLDER=/home/p860v026/temp/IM767
+GNAME=767.contigs.fasta
 BAMNAME=aligned664.bam
 
 module load samtools
 module load R
 
-# it did never resulted in useful output 
+# it never resulted in useful output 
 
 cd $GFOLDER
 

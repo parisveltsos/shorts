@@ -20,7 +20,7 @@ for line_idx, line in enumerate(in_vcf):
 			for j in range(9,len(cols)):
 				out_key.write(str(j)+'\t')
 				out_key.write(cols[j]+'\t')
-				out_key.write(cols[j].replace(".","-").split("-")[0]+'\t')
+				out_key.write(cols[j].replace("_","-").split("-")[1]+'\t')
 				out_key.write(cols[j].replace(".","-").split("-")[1]+'\t')
 				if cols[j].split("-")[0]!="767" and cols[j].split("-")[1][0]=="P":
 					out_key.write("Parental_line"+"\n")

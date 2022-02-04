@@ -1,12 +1,12 @@
 #!/bin/bash
 #SBATCH --job-name=kmc                # Job name
-#SBATCH --partition=eeb               # Partition Name (Required) eeb sixhour
+#SBATCH --partition=sixhour               # Partition Name (Required) eeb sixhour
 #SBATCH --mail-type=END,FAIL          # Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=pveltsos@ku.edu   # Where to send mail 
 #SBATCH --ntasks=1                          # Run on a single CPU
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=20gb                     # Job memory request
-#SBATCH --time=2-05:59:00             # Time limit days-hrs:min:sec
+#SBATCH --time=0-05:59:00             # Time limit days-hrs:min:sec
 #SBATCH --output=out_kmc_%j.log         # Standard output and error log
 
 
@@ -14,13 +14,13 @@
 
 echo "Running"
 
-cd /home/p860v026/temp/IM$1
+cd /home/p860v026/temp/$1
 
 ## PART 1 - count kmers - 16 cpu 16 memory sixhour queue - 45 min run
 # this uses hard disk space instead of memory so it is best to work on the temp drive.
 
 mkdir tmp
-ls *.fastq.gz > FILES
+ls *.fasta.gz > FILES
 pwd; hostname; date
 
 kmc -k21 -t16 -m4 -ci1 -fm -cs1000000 @FILES kmc_$1 tmp =  = 

@@ -18,7 +18,7 @@ cd /home/p860v026/temp/bin/flo/flo_mimulus
 
 rake -f Rakefile
 
-NAME=767_np
+NAME=767_p1
 GFFNAME=MguttatusTOL_551_v5.0.gene_exons.gff3
 
 cd run

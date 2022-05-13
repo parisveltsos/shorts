@@ -8,7 +8,7 @@
 #SBATCH --cpus-per-task=10
 #SBATCH --output=flo.log
 
-cd /home/p860v026/temp/bin/flo/flo_mimulus
+cd /panfs/pfs.local/scratch/kelly/p860v026/bin/flo/flo_mimulus
 
 # This script generates chain file and transfers gff to new genome
 # need to edit /home/p860v026/temp/bin/flo/flo_mimulus/flo_opts.yaml before running.
@@ -19,7 +19,7 @@ cd /home/p860v026/temp/bin/flo/flo_mimulus
 rake -f Rakefile
 
 NAME=767_p1
-GFFNAME=MguttatusTOL_551_v5.0.gene_exons.gff3
+GFFNAME=MguttatusTOL_551_v5.0.gene
 
 cd run
 
@@ -42,5 +42,7 @@ mv $GFFNAME $NAME\_gff
 tar -zcvf $NAME\_gff.tar.gz $NAME\_gff/
 
 cp *.gz ../results/
+
+cd ..
 
 # rm -rf run/

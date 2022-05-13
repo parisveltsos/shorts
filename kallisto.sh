@@ -13,13 +13,13 @@ module load kallisto
 
 # Variables to change once per project
 
-KALDIR=/home/p860v026/temp/kallisto
+KALDIR=/panfs/pfs.local/scratch/kelly/p860v026/kallisto
 
 ## Change for each combination of mapped reads to a reference. The reads can be `.fa` or `.fq`. Find and replace in this file `individual` and `interesting_sequence`.
-REFDIR=/home/p860v026/temp/genomes/Mgutv5/annotation
-REF=MguttatusTOL_551_v5.0.transcript.fa
+REFDIR=/panfs/pfs.local/work/kelly/p860v026/genomes/Mgutv5/annotation
+REF=MguttatusTOL_551_v5.0.transcript_primaryTranscriptOnly.fa
 
-READDIR=/home/p860v026/temp/3prime/trimmed
+READDIR=/home/p860v026/temp/trimmed
 
 cd $KALDIR || exit 1
 
@@ -33,9 +33,15 @@ cd $KALDIR || exit 1
 
 # for i in $(ls /home/p860v026/temp/3prime/trimmed/ | grep fastq); do sbatch ~/code/kallisto.sh $i; done
 
-READNAME=$(perl -pe 's/_.+L00/-R/ ; s/_.+//' <(echo $1)) 
+# get sd, did not seem to matter much in count so abandoned it
+# for i in *.fastq; do
+# cat $i | awk '{if(NR%4==2) print length($1)}' >  ${i}.readslength.txt
+# done
 
-kallisto quant -i primaryTscp --single -l 150 -s 20 -o $READNAME $READDIR/$1
+
+READNAME=$(perl -pe 's/.fastq.+/' <(echo $1)) 
+
+kallisto quant -i primaryTscp --single -l 75 -s 10 -o $READNAME $READDIR/$1
 
 
 

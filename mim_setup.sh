@@ -14,11 +14,12 @@ STARGENOMEFOLDER=star_767_genome
 
 
 # File setup
-GFFFILE=MguttatusTOL_551_v5.0.gene_exons.gff3
-GENOMEFILE=IM767.pseudo_chroms.fa
+# GFFFILE=MguttatusTOL_551_v5.0.gene_exons.gff3
+GFFFILE=767_ruby.gff # not_in_ruby.gff
+GENOMEFILE=767purged1.fa
 
 # Name setup
-GENOMENAME=767
+GENOMENAME=767_ruby
 
 
 # GFFFILE=/home/p860v026/temp/bin/flo/flo_mimulus/results/18_664to5_85_gff/18_664to5_85lifted_cleaned_mRNAtoGene2.gff

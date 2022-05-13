@@ -19,7 +19,7 @@ source ~/code/mim_setup.sh
 #  ls -laSh /home/p860v026/temp/trimmed > list6hr
 #  vim list6hr     
 	# make listest to try everything works before submitting big job
-#  for i in $(cat listredo); do sbatch ~/code/mim_04_counts_from_bam.sh $i; done
+#  for i in $(cat list6hr); do sbatch ~/code/mim_04_counts_from_bam.sh $i; done
 
 SMALLNAME=$(perl -pe 's/.fastq.gz//' <(echo $1))
 
@@ -29,17 +29,14 @@ cd $OUTFOLDER
 
 mkdir counts_to_$GENOMENAME
 
-$HTSEQFOLDER/htseq-count -m intersection-nonempty -s yes -f bam -r pos -t gene -i ID ./mapped_to_$GENOMENAME/$SMALLNAME.bam $GFFFOLDER/$GFFFILE > ./counts_to_$GENOMENAME/$SMALLNAME\_counts.txt
+$HTSEQFOLDER/htseq-count -m intersection-nonempty -s yes -f bam -r pos -t gene -i ID ./mapped_to_767/$SMALLNAME.bam $GFFFOLDER/$GFFFILE > ./counts_to_$GENOMENAME/$SMALLNAME\_counts.txt
+# $HTSEQFOLDER/htseq-count -m intersection-nonempty -s yes -f bam -r pos -t gene -i ID ./mapped_to_$GENOMENAME/$SMALLNAME.bam $GFFFOLDER/$GFFFILE > ./counts_to_$GENOMENAME/$SMALLNAME\_counts.txt
 
 
 
 ## MERGE COUNTS
 # cd $OUTFOLDER/counts_to_$GENOMENAME
 
-# Empty files 
-# s4_541-96_counts.txt
-# s4_237-69_counts.txt
-# s6_444-124_counts.txt
 
 ## RESET COUNT FILES 
 

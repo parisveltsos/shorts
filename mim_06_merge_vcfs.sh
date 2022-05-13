@@ -16,7 +16,7 @@ source ~/code/mim_setup.sh
 
 cd $OUTFOLDER/mapped_to_$GENOMENAME
 
-grep '#' Chr_04:11700001-11800000.vcf > $GENOMENAME.vcf
+grep '#' tig00000090_1:600001-700000.vcf > $GENOMENAME.vcf
 grep -v '#' *vcf >> $GENOMENAME.vcf
 
 python ~/code/makeKey.py $GENOMENAME.vcf

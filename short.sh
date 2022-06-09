@@ -1,13 +1,14 @@
 #!/bin/bash
 #SBATCH --job-name=short              # Job name
-#SBATCH --partition=kelly           # Partition Name (Required)
+#SBATCH --partition=sixhour           # Partition Name (Required)
 #SBATCH --mail-type=END,FAIL          # Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=pveltsos@ku.edu      # Where to send mail
 #SBATCH --ntasks=1                          # Run on a single CPU
 #SBATCH --cpus-per-task=1
-#SBATCH --mem-per-cpu=24g                     # Job memory request
-#SBATCH --time=01-05:59:00             # Time limit days-hrs:min:sec
-#SBATCH --output=short_%j.log         # Standard output and error log
+#SBATCH --mem-per-cpu=4g                     # Job memory request
+#SBATCH --time=00-05:59:00             # Time limit days-hrs:min:sec
+#SBATCH --output=R-%x.%j.out
+#SBATCH --error=R-%x.%j.err
 
 echo "Running"
  
@@ -18,13 +19,21 @@ echo "Running"
 echo "started"
 date
 
-cd temp/3prime/trimmed/seq7Trimmed/
+cd /home/p860v026/temp/cleanVcf/clean
 
-for file in *.gz; do cp "$file" ../s7_"$file"; done
+cd /home/p860v026/temp/3prime
 
-cd temp/3prime/trimmed/seq6Trimmed/
+paste temp_count/*.txt | perl -pe 's/_counts.txt//g' | head -n -5 > v5_final_count.txt
 
-for file in *.gz; do cp "$file" ../s5_"$file"; done
+# module load vcftools
+# 
+# vcftools --vcf genotypes_Chr_01.vcf --relatedness
+
+
+# cd temp/3prime/trimmed/seq7Trimmed/
+# cd temp/3prime/trimmed/seq6Trimmed/
+
+# for file in *.gz; do cp "$file" ../s5_"$file"; done
 
 
 

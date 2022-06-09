@@ -2,7 +2,7 @@ import sys
 
 family = sys.argv[1]
 
-in_vcf = open("pool1.vcf", "r")
+in_vcf = open("1192.vcf", "r")
 
 out_snps = open(family + ".snps2.txt", "w")
 out_stats = open(family + ".stats2.txt", "w")
@@ -11,11 +11,11 @@ out_vcf = open(family + "clean.vcf", "w")
 #  Criteria for inclusion
 Min_key = 2 # min calls for 767 to assign genotype
 Min2 = 2 # min calls for other parental line to assign genotype
-samples = 352
+samples = 1120
 mindepth = 3
 
-father = "664-P5_S35.sorted.bam"
-mother = "767-P2_S43.sorted.bam"
+#father = "664-P"
+#mother = "767P"
 
 def parsefield( data ):
 	GT=data.split(":")[0] # 1/1:101,14,0:1,12
@@ -28,7 +28,7 @@ x767 = []
 xline = []
 xF2 = []
 amibad = {}
-in_key = open("key.txt","r")
+in_key = open("key_1192.txt","r")
 
 for line_idx, line in enumerate(in_key):
 	cols = line.replace('\n', '').split('\t')
@@ -84,8 +84,8 @@ for line_idx, line in enumerate(in_vcf):
 						lineTemp.append(GT + ':' + pl1 + ':' + ad1)
 					else:
 						lineTemp.append("./." + ':' + pl1 + ':' + ad1)
-				if GT != "./.":
-					out_snps.write(cols[0]+'\t'+cols[1]+'\t'+cols[3]+'\t'+cols[4]+'\t'+str(g["0/0"])+","+str(g["0/1"])+","+str(g["1/1"]))
+			#	if GT != "./.":
+			out_snps.write(cols[0]+'\t'+cols[1]+'\t'+cols[3]+'\t'+cols[4]+'\t'+str(g["0/0"])+","+str(g["0/1"])+","+str(g["1/1"]))
 
 			c767="U"
 			if g["0/0"]>=Min_key and g["0/1"]==0 and g["1/1"]==0:
@@ -110,8 +110,8 @@ for line_idx, line in enumerate(in_vcf):
 						lineTemp.append(GT + ':' + pl1 + ':' + ad1)
 					else:
 						lineTemp.append("./." + ':' + pl1 + ':' + ad1)
-				if GT != "./.":
-					out_snps.write('\t'+str(g["0/0"])+","+str(g["0/1"])+","+str(g["1/1"]))
+#				if GT != "./.":
+			out_snps.write('\t'+str(g["0/0"])+","+str(g["0/1"])+","+str(g["1/1"]))
 
 			cP="U"
 			if g["0/0"]>=Min2 and g["0/1"]==0 and g["1/1"]==0:
@@ -149,7 +149,7 @@ for line_idx, line in enumerate(in_vcf):
 						lineTemp.append(GT + ':' + pl1 + ':' + ad1)
 					else:
 						lineTemp.append('./.' + ':' + pl1 + ':' + ad1)
-				if GT != "./.":
+#				if GT != "./.":
 					if cat=="R":
 						if vv[0]=="0/0":
 							amibad[x][0]+=1 # add to count of good

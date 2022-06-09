@@ -203,3 +203,36 @@ Once all genes run
 	echo -e 'pheno\ttig\tbp\tgene\tlg\tcm\tlod\tp\ta\td\ta.se\td.se' > ../lod.txt
 
 	grep 0 *lods* | perl -pe 's/_1_/_/ ; s/_/\t/g; s/ehk.+tig/tig/g ; s/ +/\t/g' >> ../lod.txt
+
+
+# Long Continuous read analysis
+
+The working folders, read folders and naming are setup in `LCR_0_setup.sh`
+
+Change the file to the QREADS_NAME to be used (eg 767).
+
+The fasta reads need to be in two lines per sequence. Make if needed:
+
+	perl ~/code/makeFastaOneLine.pl < in.fasta > out.fasta
+	
+## Split reads to many files
+
+	sbatch ~/code/LCR_1_split_reads.sh $QREADS_NAME
+
+## Map each split file in parallel
+
+	cd $QREAD_FOLDER/$QREADS_NAME\mapping
+	
+	for i in $(ls *split*); do sbatch ~/code/LCR_2_minimap.sh $i; done
+	
+## Merge paf and remove large CIGAR-like columns
+	
+	sbatch ~/code/LCR_3_merge_paf.sh $QREADS_NAME
+
+## Cleanup unwanted large files
+	
+	sbatch ~/code/LCR_4_cleanup.sh $QREADS_NAME
+
+## Pull reads
+
+	python ~/code/paf_read_puller.py 767.paf tig00000804_1 2262010 2263722 2226514 2234031

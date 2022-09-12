@@ -1,5 +1,5 @@
 #!/bin/bash -l
-#SBATCH --job-name=Mim06           # Job name
+#SBATCH --job-name=Mim07           # Job name
 #SBATCH --partition=sixhour	     # Partition Name (Required)
 #SBATCH --mail-user=pveltsos@ku.edu      # Where to send mail
 #SBATCH --ntasks=1                   # Run on a single CPU

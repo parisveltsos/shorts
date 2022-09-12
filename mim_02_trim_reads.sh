@@ -15,7 +15,7 @@ source ~/code/mim_setup.sh
 
 ### Prepare list of untrimmed filenames so that the job can be run in parallel
  #  cd ~/code 
- #  ls -laSh /home/p860v026/temp/trimmed > list6hr
+ #  ls -laSh /panfs/pfs.local/scratch/kelly/p860v026/3prime/reads > list6hr
  #  vim list6hr
 	# edit to just the filenames
  #  for i in $(cat list6hr); do sbatch ~/code/mim_02_trim_reads.sh $i; done

@@ -7,10 +7,10 @@ HTSEQFOLDER=/home/p860v026/.local/bin
 # Folder setup 
 
 OUTFOLDER=/panfs/pfs.local/scratch/kelly/p860v026/3prime
-TRIMMEDFOLDER=/home/p860v026/temp/trimmed
+TRIMMEDFOLDER=/panfs/pfs.local/scratch/kelly/p860v026/3prime/trimmed
 GENOMEFOLDER=/panfs/pfs.local/work/kelly/p860v026/genomes
 GFFFOLDER=/panfs/pfs.local/work/kelly/p860v026/genomes/Mgutv5/annotation
-STARGENOMEFOLDER=star_767_genome
+STARGENOMEFOLDER=star_767_ruby_genome
 
 
 # File setup

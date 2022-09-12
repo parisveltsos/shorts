@@ -16,7 +16,7 @@ source ~/code/mim_setup.sh
 
 ### MAKE LIST OF FILES FOR PARALLEL WORK 
 # cd ~/code 
-#  ls -laSh /home/p860v026/temp/trimmed > list6hr
+#  ls -laSh /panfs/pfs.local/scratch/kelly/p860v026/3prime/trimmed > list6hr
 #  vim list6hr     
 	# make listest to try everything works before submitting big job
 #  for i in $(cat list6hr); do sbatch ~/code/mim_04_counts_from_bam.sh $i; done
@@ -29,44 +29,5 @@ cd $OUTFOLDER
 
 mkdir counts_to_$GENOMENAME
 
-$HTSEQFOLDER/htseq-count -m intersection-nonempty -s yes -f bam -r pos -t gene -i ID ./mapped_to_767/$SMALLNAME.bam $GFFFOLDER/$GFFFILE > ./counts_to_$GENOMENAME/$SMALLNAME\_counts.txt
-# $HTSEQFOLDER/htseq-count -m intersection-nonempty -s yes -f bam -r pos -t gene -i ID ./mapped_to_$GENOMENAME/$SMALLNAME.bam $GFFFOLDER/$GFFFILE > ./counts_to_$GENOMENAME/$SMALLNAME\_counts.txt
-
-
-
-## MERGE COUNTS
-# cd $OUTFOLDER/counts_to_$GENOMENAME
-
-
-## RESET COUNT FILES 
-
-# for i in $(ls *counts.txt); do grep -v gene $i > $i.temp; mv $i.temp $i; done
-
-
-## COMBINE ALL COUNTS
-
-#  cd $OUTFOLDER
-# mkdir temp_count
-# 
-# filenames in first line
-# cd counts_to_$GENOMENAME
-# for i in *.txt ; do echo -e "gene\t$i" | cat - $i > temp_count && mv temp_count $i; done
-# 
-# counts per file 
-# for i in $(ls | perl -pe 's/counts\///'); do cut -f2 $i > ../temp_count/$i; done
-# 
-# rownames from first file
-# for i in $(ls | perl -pe 's/counts\///' | head -1); do cut -f1 $i > ../temp_count/0count.txt; done
-# cd ..
-# 
-# combine columns, simplify names, remove last 5 rows with summary
-# 
-# May need to first change max file limit for session 
-# 
-# ulimit -n 2000
-# 
-# paste temp_count/*.txt | perl -pe 's/_counts.txt//g' | head -n -5 > $GENOMENAME\_final_count.txt
-# rm -rf temp_count
-# 
-# make matrix, count and design files
+$HTSEQFOLDER/htseq-count -m intersection-nonempty -s yes -f bam -r pos -t gene -i ID ./mapped_to_$GENOMENAME/$SMALLNAME.bam $GFFFOLDER/$GFFFILE > ./counts_to_$GENOMENAME/$SMALLNAME\_counts.txt
 

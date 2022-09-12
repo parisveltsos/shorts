@@ -15,7 +15,7 @@ source ~/code/mim_setup.sh
 ### RUN ONCE PER READ BY GENOME COMBINATION (7Gb memory for parent, 8 cpu, 50 min)
 ### MAKE LIST OF FILES FOR PARALLEL WORK 
 # cd ~/code 
-#  ls -laSh /home/p860v026/temp/trimmed > list6hr
+#  ls -laSh /panfs/pfs.local/scratch/kelly/p860v026/3prime/trimmed > list6hr
 #  vim list6hr     
 	# split to listjk >3Gb and list6hr
 	# make listest to try everything works before submitting big job

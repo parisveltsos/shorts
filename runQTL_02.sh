@@ -1,16 +1,20 @@
-#!/bin/bash -l
-#SBATCH --job-name=qtl	    # Job name
-#SBATCH --partition=sixhour
+#!/bin/bash
+#SBATCH --job-name=bqtl2              # Job name
+#SBATCH --partition=sixhour           # Partition Name (Required)
+#SBATCH --mail-type=END,FAIL          # Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=pveltsos@ku.edu      # Where to send mail
-#SBATCH --ntasks=1                   # Run on a single CPU
+#SBATCH --ntasks=1                          # Run on a single CPU
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=2Gb                     # Job memory request
-#SBATCH --time=0-05:59:00             # Time limit days-hrs:min:sec
-#SBATCH --output=R-%x.%j.log   # Standard output and error log
+#SBATCH --mem-per-cpu=2g                     # Job memory request
+#SBATCH --time=00-05:59:00             # Time limit days-hrs:min:sec
+#SBATCH --output=R-%x.%j.out
+#SBATCH --error=R-%x.%j.err
 
 LINE=$1
-GENE=$2
+#  
+mkdir /panfs/pfs.local/scratch/kelly/p860v026/qtl/out/$LINE
+cd /panfs/pfs.local/scratch/kelly/p860v026/qtl/out/$LINE
 
-module load R
+for i in $(cat ../../genes1.txt); do sbatch ~/code/runQTL_02.sh $LINE $i; done; sleep 40m && for i in $(cat ../../genes2.txt); do sbatch ~/code/runQTL_02.sh $LINE $i; done; sleep 40m && for i in $(cat ../../genes3.txt); do sbatch ~/code/runQTL_02.sh $LINE $i; done; sleep 40m && for i in $(cat ../../genes4.txt); do sbatch ~/code/runQTL_02.sh $LINE $i; done; sleep 40m && for i in $(cat ../../genes5.txt); do sbatch ~/code/runQTL_02.sh $LINE $i; done;
 
-Rscript ~/code/qtl_02_runGene.r $LINE $GENE
+

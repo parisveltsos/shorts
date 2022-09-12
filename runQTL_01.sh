@@ -1,5 +1,5 @@
 #!/bin/bash -l
-#SBATCH --job-name=qtl	    # Job name
+#SBATCH --job-name=qtl1	    # Job name
 #SBATCH --partition=sixhour
 #SBATCH --mail-user=pveltsos@ku.edu      # Where to send mail
 #SBATCH --ntasks=1                   # Run on a single CPU
@@ -12,6 +12,13 @@ LINE=$1
 
 module load R
 
-cd /panfs/pfs.local/scratch/kelly/p860v026/qtl/$1
+cd /panfs/pfs.local/scratch/kelly/p860v026/qtl/out/$1
 
 Rscript ~/code/qtl_01_setup.r $1 
+
+# runtime ≈ 5 min
+
+# data prep
+# for LINE in $(echo -e "62\t155\t237\t444\t502\t541\t664\t909\t1034\t1192"); do cp /panfs/pfs.local/scratch/kelly/p860v026/vcf767/$LINE/$LINE.genotypes.txt .; done
+
+# for LINE in $(echo -e "62\t155\t237\t444\t502\t541\t664\t909\t1034\t1192"); do sbatch ~/code/runQTL_01.sh $LINE; done

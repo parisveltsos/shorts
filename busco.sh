@@ -9,12 +9,12 @@
 #SBATCH --time=0-05:59:00             # Time limit days-hrs:min:sec
 #SBATCH --output=out_busco_%j.log         # Standard output and error log
 
-BUSCOSUPPORT=/home/p860v026/temp/bin/buscoSupport
+BUSCOSUPPORT=/panfs/pfs.local/scratch/kelly/p860v026/bin/buscoSupport
 
 # GFOLDER=/temp/30day/kelly/p860v026/IM1192/purge1
-GFOLDER=/temp/30day/kelly/p860v026/genomes/Mgutv5/assembly/purge1
+GFOLDER=/panfs/pfs.local/work/kelly/p860v026/Final.builds
 # GNAME=1192.contigs.fasta 
-GNAME=v5purged1.fa
+GNAME=Mimulus_guttatus_IM767.raconPolished.contigs.fasta
 
 module load busco
 

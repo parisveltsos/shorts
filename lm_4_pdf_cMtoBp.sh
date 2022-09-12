@@ -28,7 +28,7 @@ awk -f ~/code/transpose.sh ../normcounts.txt | head -1 | perl -pe 's/\t/,/g' > $
 join -1 1 -2 1 <(awk -f ~/code/transpose.sh ../normcounts.txt | perl -pe 's/\./-/' | sort) <(sort temp_F2names.txt) | perl -pe 's/gene/id/ ; s/ /,/g' >> $LINE.phenotypes.txt
 
 
-# Make geno data
+# Make list of individuals with good map information
 
 cut -f2 $LINE.linkage | tail -n +3 > temp_F2names.txt
 

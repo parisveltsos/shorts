@@ -53,7 +53,23 @@ If all looks good, submit the parallel jobs
 
 ## Generate counts
 
-mim_04_counts_from_bam.sh
+Ensure it works before submitting many jobs
+
+	for i in $(tail -1 list6hr); do sbatch ~/code/mim_04_counts_from_bam.sh $i; done
+
+Submit many jobs
+
+	for i in $(cat list6hr); do sbatch ~/code/mim_04_counts_from_bam.sh $i; done
+
+## Combine counts
+
+If this step was unsuccessfully, first reset count files
+
+	# for i in $(ls *counts.txt); do grep -v gene $i > $i.temp; mv $i.temp $i; done
+	
+	sbatch ~/code/mim_05_combine_counts.sh
+
+The resulting file in `3prime/` folder is ready for RNAseq analysis and transforming for QTL analysis.
 
 ## Call SNPs
 
@@ -76,22 +92,23 @@ Submit parallel jobs making vcfs for small chunks of the genome.
 Make a test run. It should produce a vcf in mapped_to_$GENOME. Take the script input from 
 
 	source ~/code/mim_setup.sh
-	sbatch ~/code/mim_05_make_vcf.sh <(tail -1 $OUTFOLDER/star_$GENOMENAME\_genome/split.chr.bed)
+	sbatch ~/code/mim_06_make_vcf.sh <(tail -1 $OUTFOLDER/star_$GENOMENAME\_genome/split.chr.bed)
 
 Run parallel jobs, second line is needed if the split.chr.bed file has more than 5000 lines
 
-	for i in $(cat $OUTFOLDER/$STARGENOMEFOLDER/split.chr.bed); do sbatch ~/code/mim_05_make_vcf.sh $i; done
+	for i in $(cat $OUTFOLDER/star_$GENOMENAME\_genome/split.chr.bed); do sbatch ~/code/mim_06_make_vcf.sh $i; done
 
-# for i in $(cat $OUTFOLDER/$STARGENOMEFOLDER/split.chr.bed | tail -90); do sbatch ~/code/mim_05_make_vcf.sh $i; done # can only submit 5000 jobs
+	# for i in $(cat $OUTFOLDER/$STARGENOMEFOLDER/split.chr.bed | tail -90); do sbatch ~/code/mim_06_make_vcf.sh $i; done # can only submit 5000 jobs
 
 ### Merge to single vcf
 
-Edit the vcf in the first grep line of the mim_06_merge_vcfs with any of the vcfs in \$OUTFOLDER/mapped_to_$GENOMENAME
+Edit the vcf in the first grep line of the mim_07_merge_vcfs with any of the vcfs in \$OUTFOLDER/mapped_to_$GENOMENAME
 
 Run the script
 
-	sbatch mim_06_merge_vcfs.sh
+	sbatch mim_07_merge_vcfs.sh
 
+	
 	
 # VCF to genetic maps 
 
@@ -160,24 +177,41 @@ Make pdf of bp to cm information. If there were more than 14 LGs, define it in t
 	
 Download pdf and manually rename to which assembly chromosome corresponds to which LG.
 
-If the map cannot be improved, make the rqtl input
+If there are outlier individuals, repeat the lepmap workflow using the updated `bad.boys.txt` file.
 
-	INPUT QTL zaba
-
-If there were outlier individuals, repeat the lepmap workflow using the updated `bad.boys.txt` file.
-
-
-
-## Clean vcf
-
-	~/code/cleanvcf.sh
-
+When the map cannot be improved (may take 3-4 iterations), make the rqtl input (below).
 
 # QTL
 
 ## Data prep
 
-## QTL prep
+### Add gene to bpcm file
+
+	INPUT QTL zaba
+
+### Identify nearest map location for all genes with counts
+
+	genes.to.a.specific.map.gz
+
+Manually fix map
+
+### Make genotype file
+
+Need to transfer the imputed genotypes from LM3 to the finalized maps. The script uses the contig_bp information which is identifies each SNP (it is unique) and a common field between the LM genotypes and the finalized maps.
+
+Copy the manually fixed map (e.g. `1034.corr.map.txt`) to the LM3 output folder for a specific line.
+
+Make the genotype file
+
+	sbatch ~/code/runQTL_00_genoprep.sh $LINE
+
+### Make phenotype (gene expression) file
+
+The files from the voom transformation of the raw count data (`voomCounts.txt`, `voomWeights.txt`, `voomDesign.txt`) are split into data for a particular family, to be analysed separately by rqtl.
+
+## QTL prep per line
+
+This makes a R.project that loads all required files and estimates lod score threshold. The subsequent scanone step is run in parallel for all genes, using the same project.
 
 	cd /panfs/pfs.local/scratch/kelly/p860v026/qtl/
 	
@@ -187,22 +221,19 @@ If there were outlier individuals, repeat the lepmap workflow using the updated 
 
 	cd /panfs/pfs.local/scratch/kelly/p860v026/qtl/out/$LINE
 
-For each LINE need to launch 5000 jobs at a time. The gene names for this are in the genes*.txt files.
+For each LINE need to launch 5000 jobs at a time. The gene names for this are in the genes*.txt files. The following script submits 5000 jobs per 40 min.
 
-	for i in $(cat ../../genes1.txt); do sbatch ~/code/runQTL_02.sh $LINE $i; done #runnin
-	for i in $(cat ../../genes2.txt); do sbatch ~/code/runQTL_02.sh $LINE $i; done
-	for i in $(cat ../../genes3.txt); do sbatch ~/code/runQTL_02.sh $LINE $i; done
-	for i in $(cat ../../genes4.txt); do sbatch ~/code/runQTL_02.sh $LINE $i; done
+	sbatch brunQTL_02.sh $LINE
 
 ## Make data from output files
 
-Once all genes run
+Once all genes run for a line
 
-	cd /panfs/pfs.local/scratch/kelly/p860v026/qtl/out/$LINE/
-	
-	echo -e 'pheno\ttig\tbp\tgene\tlg\tcm\tlod\tp\ta\td\ta.se\td.se' > ../lod.txt
+	sbatch ~/code/runQTL_03_gatherLod.sh $LINE
 
-	grep 0 *lods* | perl -pe 's/_1_/_/ ; s/_/\t/g; s/ehk.+tig/tig/g ; s/ +/\t/g' >> ../lod.txt
+## Add cis-trans information
+
+
 
 
 # Long Continuous read analysis

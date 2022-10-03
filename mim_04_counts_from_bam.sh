@@ -1,9 +1,9 @@
 #!/bin/bash -l
 #SBATCH --job-name=Mim04	    # Job name
-#SBATCH --partition=sixhour # Partition Name (Required) sixhour kelly
+#SBATCH --partition=sixhour,kelly,kucg,eeb
 #SBATCH --mail-user=pveltsos@ku.edu      # Where to send mail
 #SBATCH --ntasks=1                   # Run on a single CPU
-#SBATCH --cpus-per-task=8
+#SBATCH --cpus-per-task=2
 #SBATCH --mem=8Gb                     # Job memory request
 #SBATCH --time=0-05:59:00             # Time limit days-hrs:min:sec
 #SBATCH --output=R-%x.%j.log   # Standard output and error log
@@ -27,7 +27,7 @@ SMALLNAME=$(perl -pe 's/.fastq.gz//' <(echo $1))
 # module load python
 cd $OUTFOLDER
 
-mkdir counts_to_$GENOMENAME
+mkdir $RNANAME\_counts_to_$GENOMENAME
 
-$HTSEQFOLDER/htseq-count -m intersection-nonempty -s yes -f bam -r pos -t gene -i ID ./mapped_to_$GENOMENAME/$SMALLNAME.bam $GFFFOLDER/$GFFFILE > ./counts_to_$GENOMENAME/$SMALLNAME\_counts.txt
+$HTSEQFOLDER/htseq-count -m intersection-nonempty -s yes -f bam -r pos -t gene -i ID ./$RNANAME\_mapped_to_$GENOMENAME/$SMALLNAME.bam $GFFFOLDER/$GFFFILE > ./$RNANAME\_counts_to_$GENOMENAME/$SMALLNAME\_counts.txt
 

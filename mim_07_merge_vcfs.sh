@@ -14,9 +14,9 @@ source ~/code/mim_setup.sh
 ## MAKE FINAL VCF
 # edit the vcf in the first grep line
 
-cd $OUTFOLDER/mapped_to_$GENOMENAME
+cd $OUTFOLDER/$RNANAME\_mapped_to_$GENOMENAME
 
-grep '#' tig00000090_1:600001-700000.vcf > $GENOMENAME.vcf
-grep -v '#' *vcf >> $GENOMENAME.vcf
+grep '#' tig00000090_1:600001-700000.vcf > $RNANAME\_$GENOMENAME.vcf
+grep -v '#' *vcf >> $RNANAME\_$GENOMENAME.vcf
 
-python ~/code/makeKey.py $GENOMENAME.vcf
+python ~/code/makeKey.py $RNANAME\_$GENOMENAME.vcf

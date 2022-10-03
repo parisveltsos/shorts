@@ -19,6 +19,7 @@ cd $OUTFOLDER
 mkdir $STARGENOMEFOLDER
  
 # generate genome index
-$STAREXEC --runThreadN 8 --runMode genomeGenerate --genomeDir ./$STARGENOMEFOLDER/ --genomeFastaFiles $GENOMEFOLDER/$GENOMEFILE --sjdbGTFtagExonParentTranscript Parent --genomeSAindexNbases 12
-# $STAREXEC --runThreadN 8 --runMode genomeGenerate --genomeDir ./$STARGENOMEFOLDER/ --genomeFastaFiles $GENOMEFOLDER/$GENOMEFILE --sjdbGTFfile $GFFFOLDER/$GFFFILE --sjdbGTFtagExonParentTranscript Parent --sjdbOverhang 74 --genomeSAindexNbases 13
+# $STAREXEC --runThreadN 8 --runMode genomeGenerate --genomeDir ./$STARGENOMEFOLDER/ --genomeFastaFiles $GENOMEFOLDER/$GENOMEFILE --sjdbGTFtagExonParentTranscript Parent --genomeSAindexNbases 8
+
+$STAREXEC --runThreadN 8 --runMode genomeGenerate --genomeDir ./$STARGENOMEFOLDER/ --genomeFastaFiles $GENOMEFOLDER/$GENOMEFILE --sjdbGTFfile $GFFFOLDER/$GFFFILE --sjdbGTFtagExonParentTranscript Parent --sjdbOverhang 74 --genomeSAindexNbases 8
 

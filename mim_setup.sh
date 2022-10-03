@@ -8,21 +8,15 @@ HTSEQFOLDER=/home/p860v026/.local/bin
 
 OUTFOLDER=/panfs/pfs.local/scratch/kelly/p860v026/3prime
 TRIMMEDFOLDER=/panfs/pfs.local/scratch/kelly/p860v026/3prime/trimmed
-GENOMEFOLDER=/panfs/pfs.local/work/kelly/p860v026/genomes
-GFFFOLDER=/panfs/pfs.local/work/kelly/p860v026/genomes/Mgutv5/annotation
-STARGENOMEFOLDER=star_767_ruby_genome
+GENOMEFOLDER=/panfs/pfs.local/work/kelly/p860v026/Final.builds/purge1
+GFFFOLDER=/panfs/pfs.local/work/kelly/p860v026/Final.builds/gff
+STARGENOMEFOLDER=star_767p1_exon
 
 
 # File setup
-# GFFFILE=MguttatusTOL_551_v5.0.gene_exons.gff3
-GFFFILE=767_ruby.gff # not_in_ruby.gff
+GFFFILE=767_p1lifted_cleaned_mRNAtoGene2.gff
 GENOMEFILE=767purged1.fa
 
 # Name setup
-GENOMENAME=767_ruby
-
-
-# GFFFILE=/home/p860v026/temp/bin/flo/flo_mimulus/results/18_664to5_85_gff/18_664to5_85lifted_cleaned_mRNAtoGene2.gff
-# GENOMEFILE=/home/p860v026/temp/IM664/1.8/18_664purged.fa
-# STARGENOMEFOLDER=star_664_18_genome
-# GENOMENAME=664_18
+GENOMENAME=767_p1_gene
+RNANAME=keely

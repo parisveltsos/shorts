@@ -1,6 +1,6 @@
 #!/bin/bash -l
 #SBATCH --job-name=Mim06           # Job name
-#SBATCH --partition=sixhour	     # Partition Name (Required)
+#SBATCH --partition=kelly,kucg,eeb,sixhour	     # Partition Name (Required)
 #SBATCH --mail-user=pveltsos@ku.edu      # Where to send mail
 #SBATCH --ntasks=1                   # Run on a single CPU
 #SBATCH --cpus-per-task=1
@@ -20,12 +20,12 @@ source ~/code/mim_setup.sh
 # Split regions to 1000000 size for fast processing in sixhour queue
 # python ~/code/split.chroms.py
 
-# cd $OUTFOLDER/mapped_to_$GENOMENAME
-# for i in $(cat $OUTFOLDER/$STARGENOMEFOLDER/split.chr.bed); do sbatch ~/code/mim_05_make_vcf.sh $i; done
-# for i in $(cat $OUTFOLDER/$STARGENOMEFOLDER/split.chr.bed | tail -90); do sbatch ~/code/mim_05_make_vcf.sh $i; done # can only submit 5000 jobs
+# cd $OUTFOLDER/$RNANAME\_mapped_to_$GENOMENAME
+# for i in $(cat $OUTFOLDER/$STARGENOMEFOLDER/split.chr.bed); do sbatch ~/code/mim_06_make_vcf.sh $i; done
+
 
 # test run should produce vcf in mapped_to_$GENOME
-# sbatch ~/code/mim_05_make_vcf.sh scaffold_5793:1-1025
+# sbatch ~/code/mim_06_make_vcf.sh tig00001462_1:1-4948
 
 
 
@@ -37,7 +37,7 @@ module load samtools
 
 module load bcftools/1.9
 
-cd $OUTFOLDER/mapped_to_$GENOMENAME
+cd $OUTFOLDER/$RNANAME\_mapped_to_$GENOMENAME
 
 bcftools mpileup -Ou -I -a FORMAT/AD -f $GENOMEFOLDER/$GENOMEFILE -r ${1} -b <(ls *.bam) | bcftools call -vmO v -o ${1}.vcf
 

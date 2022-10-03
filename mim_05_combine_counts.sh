@@ -12,14 +12,14 @@ source ~/code/mim_setup.sh
 
 
 ## MERGE COUNTS
-cd $OUTFOLDER/counts_to_$GENOMENAME
+cd $OUTFOLDER/$RNANAME\_counts_to_$GENOMENAME
 
 
 cd $OUTFOLDER
 mkdir temp_count
 
 # add filenames in first line
-cd counts_to_$GENOMENAME
+cd $RNANAME\_counts_to_$GENOMENAME
 for i in *.txt ; do echo -e "gene\t$i" | cat - $i > temp_count && mv temp_count $i; done
 
 # add counts per file 
@@ -36,7 +36,7 @@ cd ..
 
 ulimit -n 2000
 
-paste temp_count/*.txt | perl -pe 's/_counts.txt//g' | head -n -5 > $GENOMENAME\_final_count.txt
+paste temp_count/*.txt | perl -pe 's/_counts.txt//g' | head -n -5 > $RNANAME\_$GENOMENAME\_final_count.txt
 
 rm -rf temp_count
 

@@ -5,15 +5,11 @@
 	mkdir reads
 	mkdir trimmed
 	
-Download files per individual from sequencing facility in `reads` folder.
+Download files per individual from sequencing facility in `reads_$POPULATION` folder, where $POPULATION refers to the source families of the RNAseq data.
 
-## Concatenate fastq by ID
-	
-	for i in $(ls *gz | grep -v L002 | perl -pe 's/_S.+//g'); do cat $i* > $i.fastq.gz; done
+## Fastq to reads and vcf
 
-# Fastq to reads and vcf
-
-The working folders, reference assembly and gff and names are setup in `mim_setup.sh`
+The working folders, reference assembly, gff and RNA and genome output names are setup in `mim_setup.sh`
 
 ## Index genome
 
@@ -22,6 +18,8 @@ Generate an index for the genome to use with the STAR aligner. There are options
 	sbatch mim_01_index_genome.sh
 
 ## Trim the reads
+
+Edit the `mim_02_trim_reads.sh` script to have the run name (e.g. "s1") in line 28. This will produce unique sequencing run - sample name which will make tracking repeat runs of the same sample easy.
 
 This is run once per read file. First make a text file with the filenames, so that the jobs can be run in parallel.
 	
@@ -41,15 +39,14 @@ Try with one file to make sure it works well before submitting the parallel jobs
 
 	cd mapped_to_$GENOMENAME
 	
-	for i in $(tail -1 list6hr); do sbatch ~/code/mim_03a_map_reads.sh $i; done
+	for i in $(tail -1 list6hr); do sbatch ~/code/mim_03_map_reads.sh $i; done
 
 Once run, bam files should appear in $OUTFOLDER/mapped_to_$GENOMENAME
 
 If all looks good, submit the parallel jobs
 
-	for i in $(cat list6hr); do sbatch ~/code/mim_03a_map_reads.sh $i; done
+	for i in $(cat list6hr); do sbatch ~/code/mim_03_map_reads.sh $i; done
 	
-	for i in $(cat listjk); do sbatch ~/code/mim_03b_map_reads.sh $i; done
 
 ## Generate counts
 
@@ -195,19 +192,88 @@ When the map cannot be improved (may take 3-4 iterations), make the rqtl input (
 
 Manually fix map
 
-### Make genotype file
+### Generate map and genotype data from Genotype.calls.txt
 
-Need to transfer the imputed genotypes from LM3 to the finalized maps. The script uses the contig_bp information which is identifies each SNP (it is unique) and a common field between the LM genotypes and the finalized maps.
+Split big genotype file every 5834 lines, the number of genotype calls per individual, hence make a file per individual.
 
-Copy the manually fixed map (e.g. `1034.corr.map.txt`) to the LM3 output folder for a specific line.
+	split -d -l5834 Genotype.calls.txt
 
-Make the genotype file
+Rename split files based on first word in first line, which is the individual id
 
-	sbatch ~/code/runQTL_00_genoprep.sh $LINE
+	for i in $(ls | grep x); do mv "$i" "$(head -1 "$i" | cut -f 1)"; done
 
-### Make phenotype (gene expression) file
+Keep only relevant fields and transpose to make SNP name, genotype call file per individual
+
+	for i in $(ls | grep _); do head -1 $i | cut -f 1 > $i.txt; cut -f 6 $i | perl -pe 's/\t/_/' >> $i.txt; done
+
+Make map file
+
+	echo -e "id\t" > map.txt
+	cut -f 4-5 s12_1192-39 | perl -pe 's/\t/_/' >> map.txt
+
+Combine genotypes and map file to final genotypes
+
+	paste map.txt s*.txt | perl  ~/code/transposeTabDelimited.pl  > wp_genotypes.txt
+	
+Manually sort the map by chromosome and location (move lines 10_ to 14_ to end of file). 
+
+Transpose and sort by first column to keep IDs in repeatable order.
+
+Replace tabs with commas. Use the header with SNP IDs to make a new file with 3 lines: SNP ID, chromosome, number of marker (resets to 1 in each chromosome). Name the file `rQTL.headers.txt`
+
+Put remaining lines into new file `rQTL.allGenotypes.txt`. Replace AA -> A, AB -> H, BB -> B, NN -> 0
+
+Make list of IDs for which genotypes exist. It will be used to filter the counts file to only those individuals.
+
+	cut -f1 -d, rQTL.allGenotypes.txt > includedIDs.txt
+
+### Voom transformation (generation of phenotype - gene expression files for rQTL)
+
+The phenotype file `Thinned.counts.v5.cpm1.txt` was generated for the GEMMA study, the same remaining genes with cpm>1 are used for voom transformation. Sort the IDs alphabetically so the design file has the same order.
+
+Generate a subset of the design file with the individuals that passed the GEMMA criteria for inclusion. 
+
+	awk -f ~/Documents/git/shorts/transpose.sh <(head -1 Thinned.counts.v5.cpm1.txt) > includedIDs.txt
+
+	for i in $(cat includedIDs.txt); do grep $i wp_design.txt  >> wp.v5.design.genotyped_temp.txt; done
+
+	head -1 wp_design.txt > wp.v5.design.genotyped.txt
+	
+	sort wp.v5.design.genotyped_temp.txt | uniq | sort -k 10 >> wp.v5.design.genotyped.txt
+
+Manually remove lines from `wp.v5.design.genotyped.txt` with 1 next to them after the following command
+
+	cat <(cut -f 10 wp.v5.design.genotyped.txt) <(cat includedIDs.txt) | sort | uniq -c | sort | head -20
+
+Edit the path and input filename in the `voom_transform.R` file and run it.
+	Rscript voom_transform.R
+
+The script 
+
+	* keeps only genes with >0 reads in 5% of the sample (22239 genes remain)
+	* performs edgeR's TMM normalisation and keeps genes with average log CPM >=0 (17253 genes remain), 
+	* applies voom transformation with plant cohort and family as parameters
+	* produces the voom transformed data, a weights file and a design file to be used by rQTL
+	
+#### Minor edits to R script output
+
+Counts: Fix header, transpose, fix ID names, make comma delimited.
+
+	sed 's/s/id\ts/' wp_v5_voomCounts_lcpm1.txt | perl ~/Documents/git/shorts/transposeTabDelimited.pl | sed 's/\./-/ ; s/\t/,/g' > voomCounts.txt
+
+Weights: add fixed ID names, transpose
+
+	head -1 wp_v5_voomCounts_lcpm1.txt | sed 's/s/id\ts/ ; s/\./-/g' > voomWeights_temp.txt
+
+	grep -v rownames wp_v5_voomWeights_lcpm1.txt >> voomWeights_temp.txt
+	
+	perl ~/Documents/git/shorts/transposeTabDelimited.pl voomWeights_temp.txt > voomWeights.txt
+
+### Generate family-specific rQTL files
 
 The files from the voom transformation of the raw count data (`voomCounts.txt`, `voomWeights.txt`, `voomDesign.txt`) are split into data for a particular family, to be analysed separately by rqtl.
+
+	for LINE in $(echo -e "62\t155\t444\t502\t541\t664\t909\t1034\t1192") ; do cat <(grep id voomCounts.txt | perl -pe 's/\t/,/g') <(grep _$LINE voomCounts.txt | grep -v P | perl -pe 's/\t/,/g') > $LINE.count.txt ; cat <(grep id voomWeights.txt | perl -pe 's/,/\t/g') <(grep _$LINE voomWeights.txt | grep -v P | perl -pe 's/,/\t/g') > $LINE.weight.txt ; cat <(echo -e "id\tcohort") <(grep _$LINE wp.v5.design.genotyped.txt | cut -f 10,12 | grep -v P | perl -pe 's/one/0/g ; s/two/0/g ; s/three/1/g ; s/four/1/g') > $LINE.cohort.txt ; cat rQTL.headers.txt <(grep _$LINE rQTL.allGenotypes.txt | grep -v P) > $LINE.genotypes.txt; done
 
 ## QTL prep per line
 
@@ -215,7 +281,7 @@ This makes a R.project that loads all required files and estimates lod score thr
 
 	cd /panfs/pfs.local/scratch/kelly/p860v026/qtl/
 	
-	sbatch ~/code/runQTL_01.sh $LINE
+	for LINE in $(echo -e "62\t155\t444\t502\t541\t664\t909\t1034\t1192"); do sbatch ~/code/runQTL_01.sh $LINE; done
 	
 ## Run genes
 

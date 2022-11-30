@@ -35,7 +35,7 @@ SMALLNAME=$(perl -pe 's/.fastq.gz//' <(echo $1))
 cd $OUTFOLDER
 mkdir $RNANAME\_mapped_to_$GENOMENAME
 
-$STAREXEC --runThreadN 8 --genomeDir ./$STARGENOMEFOLDER/ --readFilesCommand zcat --readFilesIn $TRIMMEDFOLDER/$1 --outFilterType BySJout --outFilterMultimapNmax 20 --alignSJoverhangMin 8 --alignSJDBoverhangMin 1 --outFilterMismatchNmax 999 --outFilterMismatchNoverLmax 0.1 --alignIntronMin 20  --alignIntronMax 1000000 --alignMatesGapMax 1000000 --outSAMattributes NH HI NM MD --outSAMtype BAM SortedByCoordinate --outFileNamePrefix ./$RNANAME\_mapped_to_$GENOMENAME/$SMALLNAME
+$STAREXEC --runThreadN 8 --genomeDir ./$STARGENOMEFOLDER/ --readFilesCommand zcat --readFilesIn $TRIMMEDFOLDER\_$RNANAME/$1 --outFilterType BySJout --outFilterMultimapNmax 20 --alignSJoverhangMin 8 --alignSJDBoverhangMin 1 --outFilterMismatchNmax 999 --outFilterMismatchNoverLmax 0.1 --alignIntronMin 20  --alignIntronMax 1000000 --alignMatesGapMax 1000000 --outSAMattributes NH HI NM MD --outSAMtype BAM SortedByCoordinate --outFileNamePrefix ./$RNANAME\_mapped_to_$GENOMENAME/$SMALLNAME
 
 cd $RNANAME\_mapped_to_$GENOMENAME
 mkdir infoFiles

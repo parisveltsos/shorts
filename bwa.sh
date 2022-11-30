@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=bwa                # Job name
-#SBATCH --partition=eeb               # Partition Name (Required) eeb sixhour
+#SBATCH --partition=eeb,kelly,sixhour,kucg               # Partition Name (Required) eeb sixhour
 #SBATCH --mail-type=END,FAIL          # Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=pveltsos@ku.edu   # Where to send mail 
 #SBATCH --ntasks=1                          # Run on a single CPU

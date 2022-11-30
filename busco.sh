@@ -12,9 +12,9 @@
 BUSCOSUPPORT=/panfs/pfs.local/scratch/kelly/p860v026/bin/buscoSupport
 
 # GFOLDER=/temp/30day/kelly/p860v026/IM1192/purge1
-GFOLDER=/panfs/pfs.local/work/kelly/p860v026/Final.builds
+GFOLDER=/home/p860v026/temp/racon/62
 # GNAME=1192.contigs.fasta 
-GNAME=Mimulus_guttatus_IM767.raconPolished.contigs.fasta
+GNAME=62.racon3.fasta
 
 module load busco
 

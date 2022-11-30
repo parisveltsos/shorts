@@ -1,8 +1,8 @@
 #!/bin/bash
-#SBATCH --job-name=flo
-#SBATCH --partition=eeb
-#SBATCH --time=1-05:59:00        
-#SBATCH --mem-per-cpu=20g
+#SBATCH --job-name=floA
+#SBATCH --partition=kelly,kucg,eeb
+#SBATCH --time=2-05:59:00        
+#SBATCH --mem-per-cpu=30g
 #SBATCH --mail-user=pveltsos@ku.edu
 #SBATCH --ntasks=1             
 #SBATCH --cpus-per-task=10
@@ -12,14 +12,14 @@ cd /panfs/pfs.local/scratch/kelly/p860v026/bin/flo/flo_mimulus
 
 # This script generates chain file and transfers gff to new genome
 # need to edit /home/p860v026/temp/bin/flo/flo_mimulus/flo_opts.yaml before running.
-# Also delete the run folder if it exists in /home/p860v026/temp/bin/flo/flo_mimulus 
+# Also delete the run folder if it exists in /panfs/pfs.local/scratch/kelly/p860v026/bin/flo/flo_mimulus
 # Also edit NAME below
 
 
 rake -f Rakefile
 
-NAME=767_p1
-GFFNAME=MguttatusTOL_551_v5.0.gene
+NAME=62.racon3
+GFFNAME=MguttatusTOL_551_v5.0.gene_exons
 
 cd run
 

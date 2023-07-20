@@ -11,20 +11,20 @@
 
 echo "Running"
  
-WORKFOLDER=/home/p860v026/temp/repeats
-GENOMEFOLDER=/home/p860v026/temp/Mgutv5/assembly
-GENOME=MguttatusTOL_551_v5.0.fa
-QUERY=MgTE.fa
+BFOLDER=/home/p860v026/temp/blast
+GENOMEFOLDER=/panfs/pfs.local/work/kelly/p860v026/Final.builds/purge1
+GENOME=62purged1.fa
+QUERY=rDNA.fasta
 
 module load blast+
 
-cd $GENOMEFOLDER
+cd $BFOLDER
 
-makeblastdb -in $GENOME -dbtype nucl
+# cp $GENOMEFOLDER/$GENOME .
 
-cd $WORKFOLDER
+# makeblastdb -in $GENOME -dbtype nucl
 
-blastn -query $QUERY -db $GENOMEFOLDER/$GENOME -outfmt 6 -num_threads 8 > $QUERY\_$GENOME\_blastn.out
+blastn -query $QUERY -db $GENOME -outfmt 6 -num_threads 8 > $QUERY\_$GENOME\_blastn.out
 
 ~/code/blast2gff.sh $QUERY\_$GENOME\_blastn.out 
 

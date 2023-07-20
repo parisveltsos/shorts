@@ -30,8 +30,8 @@ for line_idxx, liner in enumerate(in11):
 		shellScript.write("#SBATCH --output=k_%s.log\n\n\n" % sampleName )
 		shellScript.write("module load R\n")
 
-	shellScript.write("Rscript ~/code/qtl_03b_runGene_long.r 664 %s\n" % geneid )
-	shellScript.write("Rscript ~/code/qtl_03a_runGene_short.r 664 %s\n" % geneid )
+	shellScript.write("Rscript ~/code/qtl_03b_runGene_long.r 62 %s\n" % geneid )
+	shellScript.write("Rscript ~/code/qtl_03a_runGene_short.r 62 %s\n" % geneid )
 
 in11.close()
 

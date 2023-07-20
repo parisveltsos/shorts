@@ -25,7 +25,7 @@ source ~/code/mim_setup.sh
 module load java
 module load samtools
 
-TRIMMEDNAME=$(perl -pe 's/_.+gz// ; s/^/s3_/' <(echo $1))
+TRIMMEDNAME=$(perl -pe 's/_.+gz// ; s/^/s8_/' <(echo $1))
 
 cd $OUTFOLDER
 mkdir trimmed_$RNANAME

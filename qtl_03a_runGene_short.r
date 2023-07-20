@@ -4,13 +4,15 @@ library(dplyr)
 args <- commandArgs(trailingOnly = TRUE)
 
 imline = args[1] 
-# imline = 664
+# imline = 1192
 pheno = args[2] 
+# pheno = "MiIM7v11000033m.g"
 # inpath <- "/Users/pveltsos/Documents/Uni Projects/Mimulus/mim_voom/"
 # inpath <- "/Users/pveltsos/Downloads/"
 inpath <- paste("/panfs/pfs.local/scratch/kelly/p860v026/qtl/out/", sep="")
+inpath2 <- paste("/panfs/pfs.local/scratch/kelly/p860v026/qtl/in/", sep="")
 
-load(paste(inpath, imline,'_short.Rdata', sep=""))
+load(paste(inpath, imline,'_long.Rdata', sep=""))
 outpath <- paste("/panfs/pfs.local/scratch/kelly/p860v026/qtl/out/", imline, "/", sep="")
 dir.create(outpath)
 
@@ -25,9 +27,15 @@ mapthis2 <- calc.genoprob(mapthis2, step=1, error.prob=0.001)
 
 mapthis2 <- sim.geno(mapthis2,  n.draws=32, step=0, off.end=0.0, error.prob=1.0e-4, stepwidth = "fixed", map.function="kosambi")
 
+wData <- read.table(paste(inpath2, line, ".weight.txt", sep=""), header=T)
+
 scanone.w.c <- scanone(mapthis2, weights=unlist(wData[pheno]), addcovar=cData$cohort, pheno.col=pheno, method=method, model=modeltype) 
 
 perm.w.c <- scanone(mapthis2, n.perm=permnumber, weights=unlist(wData[pheno]), pheno.col=pheno, method=method, addcovar=cData$cohort, model=modeltype)
+
+# scanone.w.c <- scanone(mapthis2, weights=unlist(wData[pheno]), pheno.col=pheno, method=method, model=modeltype) # for 62 which has no cohort
+
+# perm.w.c <- scanone(mapthis2, n.perm=permnumber, pheno.col=pheno, method=method, weights=unlist(wData[pheno]), model=modeltype) # for 62 which has no cohort
 
 # sink(file=file.path(outpath, paste(pheno, method, permnumber, 'threshold.txt', sep="_")), split=T)
 # paste('lod',round(summary(perm.w.c)[1], digits=3))
@@ -68,6 +76,8 @@ merged1 <- merge(citable, simple.lod.effect.table, by.x="snp", by.y="snp", all=F
 outTable <- select(merged1, pheno, snp, lg, cm, lod, p, a, d, se.a, se.d, threshold, lod.ci.low, lod.ci.high)
 
 write.table(outTable, file=file.path(outpath, paste(pheno, method, permnumber, 'lods.txt', sep="_")), quote=F, row.names=F, sep="\t") 
+write.table(citable, file=file.path(outpath, paste(pheno, method, permnumber, 'ci.txt', sep="_")), quote=F, row.names=F, sep="\t") 
+write.table(simple.lod.effect.table, file=file.path(outpath, paste(pheno, method, permnumber, 'simpleLods.txt', sep="_")), quote=F, row.names=F, sep="\t") 
 
 
 # marker <- find.marker(mapthis2, 7, 43.279398)

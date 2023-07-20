@@ -9,6 +9,7 @@ pheno = args[2]
 # inpath <- "/Users/pveltsos/Documents/Uni Projects/Mimulus/mim_voom/"
 # inpath <- "/Users/pveltsos/Downloads/"
 inpath <- paste("/panfs/pfs.local/scratch/kelly/p860v026/qtl/out/", sep="")
+inpath2 <- paste("/panfs/pfs.local/scratch/kelly/p860v026/qtl/in/", sep="")
 
 load(paste(inpath, imline,'_long.Rdata', sep=""))
 outpath <- paste("/panfs/pfs.local/scratch/kelly/p860v026/qtl/out/", imline, "/", sep="")
@@ -25,9 +26,14 @@ mapthis2 <- calc.genoprob(mapthis2, step=1, error.prob=0.001)
 
 mapthis2 <- sim.geno(mapthis2,  n.draws=32, step=0, off.end=0.0, error.prob=1.0e-4, stepwidth = "fixed", map.function="kosambi")
 
+wData <- read.table(paste(inpath2, line, ".weight.txt", sep=""), header=T)
+
+# scanone.w.c <- scanone(mapthis2, weights=unlist(wData[pheno]), pheno.col=pheno, method=method, model=modeltype) # for 62 which has no cohort
+
 scanone.w.c <- scanone(mapthis2, weights=unlist(wData[pheno]), addcovar=cData$cohort, pheno.col=pheno, method=method, model=modeltype) 
 
-# perm.w.c <- scanone(mapthis2, n.perm=permnumber, weights=unlist(wData[pheno]), pheno.col=pheno, method=method, addcovar=cData$cohort, model=modeltype)
+
+# perm.w.c <- scanone(mapthis2, n.perm=permnumber, weights=unlist(wData[pheno]), pheno.col=pheno, method=method, addcovar=cData$cohort, model=modeltype) # not used
 # 
 # # sink(file=file.path(outpath, paste(pheno, method, permnumber, 'threshold.txt', sep="_")), split=T)
 # # paste('lod',round(summary(perm.w.c)[1], digits=3))

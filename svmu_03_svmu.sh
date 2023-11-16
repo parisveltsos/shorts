@@ -14,4 +14,9 @@ source ~/code/svmu_00_setup.sh
 
 cd $WFOLDER
 
-svmu $FOLDER_NAME.delta $REF_NAME\purged1.fa $QUERY_NAME.fa snp_mode=h $FOLDER_NAME\_lastz.txt $FOLDER_NAME\_svmu_out
+# svmu $FOLDER_NAME.delta $R_NAME.fa $Q_NAME\purged1.fa snp_mode=h $FOLDER_NAME\_svmu_out
+
+# Create empty lastz output, required for svmu (lastz was not used)
+touch $FOLDER_NAME\_lastz.txt
+
+svmu $FOLDER_NAME.delta $R_NAME.fa $Q_NAME\purged1.fa snp_mode=h $FOLDER_NAME\_lastz.txt $FOLDER_NAME\_svmu_out

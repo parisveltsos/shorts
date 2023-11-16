@@ -14,4 +14,4 @@ source ~/code/svmu_00_setup.sh
 
 cd $WFOLDER
 
-lastz $REF_NAME\purged1.fa[multiple] $QUERY_NAME.fa[multiple] --chain --format=general:name1,strand1,start1,end1,name2,strand2,start2,end2 > $FOLDER_NAME\_lastz.txt
+lastz $R_NAME.fa[multiple] $Q_NAME\purged1.fa[multiple] --hspthresh=3500 --chain --format=general:name1,strand1,start1,end1,name2,strand2,start2,end2 > $FOLDER_NAME\_lastz.txt

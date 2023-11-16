@@ -14,8 +14,11 @@ mkdir $WFOLDER
 cd $WFOLDER
 
 # copy reference genome
-cp /panfs/pfs.local/work/kelly/p860v026/Final.builds/purge1/$REF_NAME\purged1.fa .
+cp /panfs/pfs.local/work/kelly/p860v026/Final.builds/MguttatusvarIM767.v1.1.prelim.annot/Mimulus_guttatus_var_IM767.mainGenome.fasta ./$R_NAME.fa
+
+# copy query genome
+cp /panfs/pfs.local/work/kelly/p860v026/Final.builds/purge1/$Q_NAME\purged1.fa .
 
 # generate contig query from contig and query genome name
-grep -A 1 $TIG_NAME /panfs/pfs.local/work/kelly/p860v026/Final.builds/purge1/$QGENOME_NAME\purged1.fa > $QUERY_NAME.fa
+# grep -A 1 $Q_NAME /panfs/pfs.local/work/kelly/p860v026/Final.builds/purge1/$QGENOME_NAME\purged1.fa > $QUERY_NAME.fa
 

@@ -15,7 +15,7 @@ source ~/code/syri_00_setup.sh
 
 cd $WFOLDER
 
-nucmer --maxmatch -c 100 -b 500 -l 2000 -t 16 -p out1 767pseudoChr3.fa $QNAME\_longest50.fa
+nucmer --maxmatch -c 100 -b 500 -l 2000 -t 16 -p out1 IM767.fa $QNAME\_longest50.fa
 
 
 # -l min exact match length

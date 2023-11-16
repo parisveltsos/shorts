@@ -16,8 +16,9 @@ cd $WFOLDER
 # copy reference pseudochromosomes
 
 # cp /panfs/pfs.local/work/kelly/p860v026/genomes/IM767.pseudo_chroms.fa .
+cp /panfs/pfs.local/work/kelly/p860v026/Final.builds/MguttatusvarIM767.v1.1.prelim.annot/Mimulus_guttatus_var_IM767.mainGenome.fasta IM767.fa
 
-cp $GFOLDER/767pseudoChr3.fa .
+# cp $GFOLDER/767pseudoChr3.fa .
 
 # awk '/^>/ {printf("%s%s\t",(N>0?"\n":""),$0);N++;next;} {printf("%s",$0);} END {printf("\n");}'  $GFOLDER/767purged1.fa  | awk -F '\t' '{printf("%d\t%s\n",length($2),$0);}' | sort -k1,1n | cut -f 2- | tr "\t" "\n" > 767_sorted_temp.fa
 

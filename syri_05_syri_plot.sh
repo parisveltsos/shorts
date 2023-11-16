@@ -18,6 +18,7 @@ conda activate /panfs/pfs.local/scratch/kelly/p860v026/conda/envs/syri5
 
 python3 /home/p860v026/bin/syri/syri/syri/bin/syri --nosnp -c out5.filtered.coords -d out5.filtered.delta -r 62_chr11.fa -q 767_804.fa
 
+
 # python3 /home/p860v026/bin/syri/syri/syri/bin/syri --nosnp -c out1.filtered.coords -d out1.filtered.delta -r 767pseudoChr3.fa -q 62_longest50.fa
 
 python3 /home/p860v026/bin/syri/syri/syri/bin/plotsr syri.out 62_chr11.fa 767_804.fa -H 8 -W 5

@@ -6,13 +6,13 @@ Determine the orientation of purged assemblies relative to 767 pseudochromosome 
 
 Copy pseudochromosome assembly of 767 and make 50 longest contigs fasta of query genome in a new working folder. 
 
-	sbatch syri_01_prep_genomes.sh 664
+	sbatch ~/code/syri_01_prep_genomes.sh 664
 
-	for LINE in $(echo -e "62\t155\t444\t502\t541\t664\t909\t1034\t1192"); do sbatch syri_01_prep_genomes.sh $LINE; done
+	for LINE in $(echo -e "62\t155\t444\t502\t541\t664\t909\t1034\t1192"); do sbatch ~/code/syri_01_prep_genomes.sh $LINE; done
 
 Mummer align 767 pseudo chromosomes with contigs of other purged assembly 
 
-	for LINE in $(echo -e "62\t155\t444\t502\t541\t664\t909\t1034\t1192"); do sbatch syri_02_mummerA.sh $LINE; done
+	for LINE in $(echo -e "62\t155\t444\t502\t541\t664\t909\t1034\t1192"); do sbatch ~/code/syri_02_mummerA.sh $LINE; done
 	
 Look at `out1.filtered.coords` and manually make pseudochromosomes for purged assembly, orienting appropriately the contigs ans joining them with 10,000 SNPs. Eg script 
 `make1192Pseudo.txt`.

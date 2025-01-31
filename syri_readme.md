@@ -1,6 +1,6 @@
 Edit paths in syri_00_setup.sh
 
-Make 767 pseudo chromosomes file.
+Make 767 pseudo chromosomes file. 
 
 Determine the orientation of purged assemblies relative to 767 pseudochromosome assembly.
 
